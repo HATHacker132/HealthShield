@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthShield - Disease Detection & Alert System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2E8B57;
+            --light-green: #3CB371;
+            --dark-green: #1D5D38;
+            --primary-blue: #1E90FF;
+            --light-blue: #6495ED;
+            --alert-red: #FF4500;
+            --light-red: #FF7F50;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --dark-gray: #333333;
+            --mid-gray: #666666;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            background-color: var(--light-gray);
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            color: var(--primary-green);
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--dark-gray);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"><rect fill="%231D5D38" width="800" height="400"/><path fill="%232E8B57" fill-opacity="0.5" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,261.3C672,256,768,224,864,224C960,224,1056,256,1152,245.3C1248,235,1344,181,1392,154.7L1440,128L1440,400L1392,400C1344,400,1248,400,1152,400C1056,400,960,400,864,400C768,400,672,400,576,400C480,400,384,400,288,400C192,400,96,400,48,400L0,400Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+        
+        .form-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-green);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2);
+        }
+        
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .symptom-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .symptom-item:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .symptom-item.selected {
+            background-color: var(--light-green);
+            color: var(--white);
+        }
+        
+        .symptom-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .form-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-3px);
+        }
+        
+        /* Results Section */
+        .results-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .risk-low {
+            border-left: 5px solid var(--primary-green);
+        }
+        
+        .risk-high {
+            border-left: 5px solid var(--alert-red);
+        }
+        
+        .risk-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .risk-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .risk-desc {
+            margin-bottom: 20px;
+        }
+        
+        .disease-list {
+            margin-bottom: 20px;
+        }
+        
+        .disease-item {
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .disease-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .disease-icon {
+            margin-right: 10px;
+        }
+        
+        .sms-alert {
+            background-color: #FFF3CD;
+            border-left: 5px solid #FFC107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .alert-icon {
+            color: #856404;
+            margin-right: 10px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            background-color: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            z-index: 2000;
+            transform: translateX(150%);
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            border-left: 4px solid var(--primary-green);
+        }
+        
+        .notification-warning {
+            border-left: 4px solid var(--alert-red);
+        }
+        
+        .notification-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .notification-success .notification-icon {
+            color: var(--primary-green);
+        }
+        
+        .notification-warning .notification-icon {
+            color: var(--alert-red);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            color: #CCC;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-green);
+        }
+        
+        .footer-bottom {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .symptoms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-heart"></i>
+                </div>
+                <div class="logo-text">HealthShield</div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Health Surveillance for Rural India</h1>
+            <p class="hero-subtitle">Report symptoms, detect diseases early, and receive immediate alerts. Helping communities fight water-borne diseases through early detection.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- User Information Form -->
+        <section class="form-section">
+            <h2 class="section-title">Personal Information</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="userName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Age</label>
+                    <input type="number" class="form-input" id="userAge" placeholder="Enter your age">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <select class="form-select" id="userGender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Village Name</label>
+                    <input type="text" class="form-input" id="userVillage" placeholder="Enter your village name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mobile Number (optional)</label>
+                    <input type="tel" class="form-input" id="userMobile" placeholder="Enter your mobile number">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address (optional)</label>
+                    <input type="email" class="form-input" id="userEmail" placeholder="Enter your email address">
+                </div>
+            </div>
+        </section>
+        
+        <!-- Symptoms Input Section -->
+        <section class="form-section">
+            <h2 class="section-title">Select Your Symptoms</h2>
+            <p>Select all symptoms you are currently experiencing:</p>
+            
+            <div class="symptoms-grid" id="symptomsGrid">
+                <!-- Symptoms will be added here by JavaScript -->
+            </div>
+            
+            <div class="form-actions">
+                <button id="analyzeSymptoms" class="btn btn-primary">Analyze Symptoms</button>
+            </div>
+        </section>
+        
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection">
+            <!-- Results will be displayed here by JavaScript -->
+        </section>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">Success!</div>
+            <div class="notification-message" id="notificationMessage">Your information has been received successfully.</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="C:\Users\raman\Desktop\SIH_WebPage\about.html" class="footer-link">About Us</a>
+                    <a href="C:\Users\raman\Desktop\SIH_WebPage\Privacy Policy.html" class="footer-link">Privacy Policy</a>
+                    <a href="C:\Users\raman\Desktop\SIH_WebPage\Contact Us.html" class="footer-link">Contact</a>
+                    <a href="C:\Users\raman\Desktop\SIH_WebPage\FAQ.html" class="footer-link">FAQ</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Developed by Team Day Tech</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Symptom data - focusing on water-borne diseases
+        const symptoms = [
+            { id: 1, name: "Fever", icon: "fas fa-temperature-high", waterBorne: true },
+            { id: 2, name: "Diarrhea", icon: "fas fa-poop", waterBorne: true },
+            { id: 3, name: "Vomiting", icon: "fas fa-vomit", waterBorne: true },
+            { id: 4, name: "Abdominal pain", icon: "fas fa-stomach", waterBorne: true },
+            { id: 5, name: "Dehydration", icon: "fas fa-tint", waterBorne: true },
+            { id: 6, name: "Headache", icon: "fas fa-head-side-brain", waterBorne: false },
+            { id: 7, name: "Muscle aches", icon: "fas fa-dumbbell", waterBorne: false },
+            { id: 8, name: "Loss of appetite", icon: "fas fa-utensils", waterBorne: true },
+            { id: 9, name: "Nausea", icon: "fas fa-stomach", waterBorne: true },
+            { id: 10, name: "Fatigue", icon: "fas fa-bed", waterBorne: false },
+            { id: 11, name: "Blood in stool", icon: "fas fa-first-aid", waterBorne: true },
+            { id: 12, name: "Rapid heart rate", icon: "fas fa-heart", waterBorne: true }
+        ];
+        
+        // Water-borne diseases data
+        const waterBorneDiseases = [
+            {
+                name: "Cholera",
+                symptoms: [2, 3, 5, 8, 9],
+                description: "Acute diarrheal illness caused by infection of the intestine with Vibrio cholerae bacteria",
+                severity: "high"
+            },
+            {
+                name: "Typhoid",
+                symptoms: [1, 2, 4, 8, 9],
+                description: "Bacterial infection caused by Salmonella typhi that can spread throughout the body",
+                severity: "high"
+            },
+            {
+                name: "Hepatitis A",
+                symptoms: [1, 4, 6, 8, 9],
+                description: "Highly contagious liver infection caused by the hepatitis A virus",
+                severity: "medium"
+            },
+            {
+                name: "Dysentery",
+                symptoms: [2, 4, 5, 9, 11],
+                description: "Intestinal inflammation causing severe diarrhea with blood or mucus in the feces",
+                severity: "medium"
+            },
+            {
+                name: "Giardiasis",
+                symptoms: [2, 4, 8, 9, 10],
+                description: "Intestinal infection caused by the giardia parasite, spread through contaminated water",
+                severity: "medium"
+            }
+        ];
+        
+        // Selected symptoms and user data
+        let selectedSymptoms = [];
+        let userData = {};
+        
+        // DOM elements
+        const symptomsGrid = document.getElementById('symptomsGrid');
+        const analyzeBtn = document.getElementById('analyzeSymptoms');
+        const resultsSection = document.getElementById('resultsSection');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        // Initialize symptoms grid
+        function initSymptomsGrid() {
+            symptoms.forEach(symptom => {
+                const symptomElement = document.createElement('div');
+                symptomElement.className = 'symptom-item';
+                symptomElement.dataset.id = symptom.id;
+                symptomElement.innerHTML = `
+                    <div class="symptom-icon"><i class="${symptom.icon}"></i></div>
+                    <div class="symptom-name">${symptom.name}</div>
+                `;
+                
+                symptomElement.addEventListener('click', () => {
+                    symptomElement.classList.toggle('selected');
+                    const symptomId = symptom.id;
+                    
+                    if (selectedSymptoms.includes(symptomId)) {
+                        selectedSymptoms = selectedSymptoms.filter(id => id !== symptomId);
+                    } else {
+                        selectedSymptoms.push(symptomId);
+                    }
+                });
+                
+                symptomsGrid.appendChild(symptomElement);
+            });
+        }
+        
+        // Validate user form
+        function validateForm() {
+            const name = document.getElementById('userName').value.trim();
+            const age = document.getElementById('userAge').value.trim();
+            const gender = document.getElementById('userGender').value;
+            const village = document.getElementById('userVillage').value.trim();
+            //const mobile = document.getElementById('userMobile').value.trim();
+            
+            if (!name) {
+                showNotification('Please enter your name', 'warning');
+                return false;
+            }
+            
+            if (!age || age < 1 || age > 120) {
+                showNotification('Please enter a valid age', 'warning');
+                return false;
+            }
+            
+            if (!gender) {
+                showNotification('Please select your gender', 'warning');
+                return false;
+            }
+            
+            if (!village) {
+                showNotification('Please enter your village name', 'warning');
+                return false;
+            }
+            
+            // if (!mobile || mobile.length !== 10 || isNaN(mobile)) {
+            //     showNotification('Please enter a valid 10-digit mobile number', 'warning');
+            //     return false;
+            // }
+            
+            // Store user data
+            userData = {
+                name,
+                age,
+                gender,
+                village,
+                //mobile,
+                email: document.getElementById('userEmail').value.trim()
+            };
+            
+            return true;
+        }
+        
+        // Analyze symptoms for water-borne diseases
+        function analyzeSymptoms() {
+            if (selectedSymptoms.length === 0) {
+                showNotification('Please select at least one symptom', 'warning');
+                return;
+            }
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Check for water-borne disease symptoms
+            const hasWaterBorneSymptoms = selectedSymptoms.some(symptomId => {
+                const symptom = symptoms.find(s => s.id === symptomId);
+                return symptom.waterBorne;
+            });
+            
+            // Find matching water-borne diseases
+            const matchingDiseases = waterBorneDiseases.filter(disease => {
+                return disease.symptoms.some(symptom => selectedSymptoms.includes(symptom));
+            });
+            
+            // Show results
+            showResults(hasWaterBorneSymptoms, matchingDiseases);
+            
+            // Send SMS alert if water-borne disease symptoms detected
+            if (hasWaterBorneSymptoms && matchingDiseases.length > 0) {
+                sendSMSAlert(matchingDiseases);
+            }
+        }
+        
+        // Show results
+        function showResults(hasWaterBorneDisease, diseases) {
+            resultsSection.style.display = 'block';
+            
+            if (hasWaterBorneDisease && diseases.length > 0) {
+                // High risk - water-borne disease detected
+                resultsSection.className = 'results-section risk-high';
+                
+                let diseasesHTML = '';
+                diseases.forEach(disease => {
+                    diseasesHTML += `
+                        <div class="disease-item">
+                            <div class="disease-name">
+                                <i class="fas fa-bacteria disease-icon"></i>
+                                ${disease.name}
+                            </div>
+                            <p>${disease.description}</p>
+                        </div>
+                    `;
+                });
+                
+                resultsSection.innerHTML = `
+                    <div class="risk-title">
+                        <i class="fas fa-exclamation-circle risk-icon"></i>
+                        Potential Water-Borne Disease Detected
+                    </div>
+                    <div class="risk-desc">
+                        <p>Your symptoms suggest a possible water-borne disease. Please consult a healthcare professional immediately.</p>
+                        <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
+                    </div>
+                    
+                    <div class="disease-list">
+                        <h3>Possible Conditions:</h3>
+                        ${diseasesHTML}
+                    </div>
+                    
+                    <div class="sms-alert" id="smsAlert">
+                        <i class="fas fa-sms alert-icon"></i>
+                        <strong>Alert Sent:</strong> An SMS has been sent to health authorities for immediate action.
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
+                    </div>
+                `;
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+            } else {
+                // Low risk - no water-borne disease
+                resultsSection.className = 'results-section risk-low';
+                
+                resultsSection.innerHTML = `
+                    <div class="risk-title">
+                        <i class="fas fa-check-circle risk-icon"></i>
+                        No Water-Borne Disease Detected
+                    </div>
+                    <div class="risk-desc">
+                        <p>Your symptoms do not suggest a water-borne disease. However, if you're feeling unwell, please consult a healthcare professional.</p>
+                        <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
+                    </div>
+                `;
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+                showNotification('No water-borne disease detected. Your health is good!', 'success');
+            }
+        }
+        
+        // Simulate sending SMS alert
+        function sendSMSAlert(diseases) {
+            // In a real implementation, this would connect to an SMS gateway API
+            const diseaseNames = diseases.map(d => d.name).join(', ');
+            const message = `ALERT: Possible water-borne disease (${diseaseNames}) detected for ${userData.name}, ${userData.age} years, ${userData.village} village. Contact: ${userData.mobile}.`;
+            
+            // Simulate SMS sending to the provided number
+            console.log(`SMS sent to 18605001066: ${message}`);
+            
+            // Show SMS alert in UI
+            const smsAlert = document.getElementById('smsAlert');
+            if (smsAlert) {
+                smsAlert.style.display = 'block';
+            }
+            
+            showNotification('SMS alert sent to health authorities', 'success');
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            notification.className = `notification notification-${type}`;
+            notificationMessage.textContent = message;
+            
+            const icon = notification.querySelector('.notification-icon');
+            icon.className = 'notification-icon';
+            
+            if (type === 'success') {
+                icon.classList.add('fas', 'fa-check-circle');
+            } else {
+                icon.classList.add('fas', 'fa-exclamation-circle');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Event listeners
+        analyzeBtn.addEventListener('click', analyzeSymptoms);
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', initSymptomsGrid);
+    </script>
+</body>
+</html>
