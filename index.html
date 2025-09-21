@@ -18,6 +18,9 @@
             --light-gray: #F5F5F5;
             --dark-gray: #333333;
             --mid-gray: #666666;
+            --low-risk: #4CAF50;
+            --medium-risk: #FF9800;
+            --high-risk: #F44336;
         }
         
         * {
@@ -224,11 +227,15 @@
         }
         
         .risk-low {
-            border-left: 5px solid var(--primary-green);
+            border-left: 5px solid var(--low-risk);
+        }
+        
+        .risk-medium {
+            border-left: 5px solid var(--medium-risk);
         }
         
         .risk-high {
-            border-left: 5px solid var(--alert-red);
+            border-left: 5px solid var(--high-risk);
         }
         
         .risk-title {
@@ -477,12 +484,12 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-<!--             <div class="footer-content">
-                <div class="footer-links">
-                    <a href="C:\Users\raman\Desktop\SIH_WebPage\about.html" class="footer-link">About Us</a>
-                    <a href="C:\Users\raman\Desktop\SIH_WebPage\Privacy Policy.html" class="footer-link">Privacy Policy</a>
-                    <a href="C:\Users\raman\Desktop\SIH_WebPage\Contact Us.html" class="footer-link">Contact</a>
-                    <a href="C:\Users\raman\Desktop\SIH_WebPage\FAQ.html" class="footer-link">FAQ</a>
+            <div class="footer-content">
+                <!-- <div class="footer-links">
+                    <a href="#" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Contact</a>
+                    <a href="#" class="footer-link">FAQ</a>
                 </div> -->
             </div>
             <div class="footer-bottom">
@@ -508,37 +515,49 @@
             { id: 12, name: "Rapid heart rate", icon: "fas fa-heart", waterBorne: true }
         ];
         
-        // Water-borne diseases data
+        // Water-borne diseases data with risk levels
         const waterBorneDiseases = [
             {
                 name: "Cholera",
-                symptoms: [2, 3, 5, 8, 9],
+                symptoms: [2, 3, 5, 8, 9, 11],
                 description: "Acute diarrheal illness caused by infection of the intestine with Vibrio cholerae bacteria",
-                severity: "high"
+                riskLevel: "high",
+                severity: 9
             },
             {
                 name: "Typhoid",
                 symptoms: [1, 2, 4, 8, 9],
                 description: "Bacterial infection caused by Salmonella typhi that can spread throughout the body",
-                severity: "high"
+                riskLevel: "high",
+                severity: 8
             },
             {
                 name: "Hepatitis A",
                 symptoms: [1, 4, 6, 8, 9],
                 description: "Highly contagious liver infection caused by the hepatitis A virus",
-                severity: "medium"
+                riskLevel: "medium",
+                severity: 6
             },
             {
                 name: "Dysentery",
                 symptoms: [2, 4, 5, 9, 11],
                 description: "Intestinal inflammation causing severe diarrhea with blood or mucus in the feces",
-                severity: "medium"
+                riskLevel: "medium",
+                severity: 7
             },
             {
                 name: "Giardiasis",
                 symptoms: [2, 4, 8, 9, 10],
                 description: "Intestinal infection caused by the giardia parasite, spread through contaminated water",
-                severity: "medium"
+                riskLevel: "medium",
+                severity: 5
+            },
+            {
+                name: "General Digestive Issues",
+                symptoms: [2, 4, 9],
+                description: "Minor digestive discomfort that may be related to food or water",
+                riskLevel: "low",
+                severity: 3
             }
         ];
         
@@ -642,92 +661,139 @@
                 return symptom.waterBorne;
             });
             
-            // Find matching water-borne diseases
-            const matchingDiseases = waterBorneDiseases.filter(disease => {
-                return disease.symptoms.some(symptom => selectedSymptoms.includes(symptom));
+            // Find matching water-borne diseases and calculate risk score
+            let matchingDiseases = [];
+            let totalRiskScore = 0;
+            
+            waterBorneDiseases.forEach(disease => {
+                const matchedSymptoms = disease.symptoms.filter(symptom => 
+                    selectedSymptoms.includes(symptom)
+                );
+                
+                if (matchedSymptoms.length > 0) {
+                    // Calculate match percentage
+                    const matchPercentage = (matchedSymptoms.length / disease.symptoms.length) * 100;
+                    
+                    // Only include diseases with at least 30% symptom match
+                    if (matchPercentage >= 30) {
+                        const diseaseCopy = {...disease};
+                        diseaseCopy.matchPercentage = matchPercentage;
+                        diseaseCopy.matchedSymptoms = matchedSymptoms;
+                        matchingDiseases.push(diseaseCopy);
+                        
+                        // Add to total risk score (weighted by match percentage)
+                        totalRiskScore += disease.severity * (matchPercentage / 100);
+                    }
+                }
             });
             
-            // Show results
-            showResults(hasWaterBorneSymptoms, matchingDiseases);
+            // Sort by match percentage (highest first)
+            matchingDiseases.sort((a, b) => b.matchPercentage - a.matchPercentage);
             
-            // Send SMS alert if water-borne disease symptoms detected
-            if (hasWaterBorneSymptoms && matchingDiseases.length > 0) {
+            // Determine overall risk level
+            let overallRiskLevel = "low";
+            if (totalRiskScore >= 15) {
+                overallRiskLevel = "high";
+            } else if (totalRiskScore >= 8) {
+                overallRiskLevel = "medium";
+            }
+            
+            // Show results
+            showResults(hasWaterBorneSymptoms, matchingDiseases, overallRiskLevel, totalRiskScore);
+            
+            // Send SMS alert if high risk water-borne disease detected
+            if (overallRiskLevel === "high" && matchingDiseases.length > 0) {
                 sendSMSAlert(matchingDiseases);
             }
         }
         
         // Show results
-        function showResults(hasWaterBorneDisease, diseases) {
+        function showResults(hasWaterBorneDisease, diseases, riskLevel, riskScore) {
             resultsSection.style.display = 'block';
             
-            if (hasWaterBorneDisease && diseases.length > 0) {
-                // High risk - water-borne disease detected
-                resultsSection.className = 'results-section risk-high';
-                
-                let diseasesHTML = '';
+            let riskClass = "risk-low";
+            let riskIcon = "fas fa-check-circle";
+            let riskTitle = "Low Risk Detected";
+            let riskDescription = "";
+            
+            if (riskLevel === "medium") {
+                riskClass = "risk-medium";
+                riskIcon = "fas fa-exclamation-triangle";
+                riskTitle = "Medium Risk Detected";
+                riskDescription = "<p>Your symptoms suggest a possible water-borne disease. Please consult a healthcare professional soon.</p>";
+            } else if (riskLevel === "high") {
+                riskClass = "risk-high";
+                riskIcon = "fas fa-exclamation-circle";
+                riskTitle = "High Risk Detected";
+                riskDescription = "<p>Your symptoms suggest a serious water-borne disease. Please consult a healthcare professional immediately.</p>";
+            } else {
+                riskDescription = "<p>Your symptoms do not suggest a serious water-borne disease. However, if you're feeling unwell, please consult a healthcare professional.</p>";
+            }
+            
+            resultsSection.className = `results-section ${riskClass}`;
+            
+            let diseasesHTML = '';
+            if (diseases.length > 0) {
                 diseases.forEach(disease => {
                     diseasesHTML += `
                         <div class="disease-item">
                             <div class="disease-name">
                                 <i class="fas fa-bacteria disease-icon"></i>
-                                ${disease.name}
+                                ${disease.name} (${disease.riskLevel} risk)
                             </div>
                             <p>${disease.description}</p>
+                            <p><strong>Symptom match:</strong> ${Math.round(disease.matchPercentage)}%</p>
                         </div>
                     `;
                 });
-                
-                resultsSection.innerHTML = `
-                    <div class="risk-title">
-                        <i class="fas fa-exclamation-circle risk-icon"></i>
-                        Potential Water-Borne Disease Detected
-                    </div>
-                    <div class="risk-desc">
-                        <p>Your symptoms suggest a possible water-borne disease. Please consult a healthcare professional immediately.</p>
-                        <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
-                    </div>
-                    
-                    <div class="disease-list">
-                        <h3>Possible Conditions:</h3>
-                        ${diseasesHTML}
-                    </div>
-                    
-                    <div class="sms-alert" id="smsAlert">
-                        <i class="fas fa-sms alert-icon"></i>
-                        <strong>Alert Sent:</strong> An SMS has been sent to health authorities for immediate action.
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
-                    </div>
-                `;
-                
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
-                
             } else {
-                // Low risk - no water-borne disease
-                resultsSection.className = 'results-section risk-low';
+                diseasesHTML = `<p>No specific water-borne diseases identified based on your symptoms.</p>`;
+            }
+            
+            resultsSection.innerHTML = `
+                <div class="risk-title">
+                    <i class="${riskIcon} risk-icon"></i>
+                    ${riskTitle}
+                </div>
+                <div class="risk-desc">
+                    ${riskDescription}
+                    <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
+                    <p><strong>Risk Score:</strong> ${riskScore.toFixed(1)}/25</p>
+                </div>
                 
-                resultsSection.innerHTML = `
-                    <div class="risk-title">
-                        <i class="fas fa-check-circle risk-icon"></i>
-                        No Water-Borne Disease Detected
-                    </div>
-                    <div class="risk-desc">
-                        <p>Your symptoms do not suggest a water-borne disease. However, if you're feeling unwell, please consult a healthcare professional.</p>
-                        <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
-                    </div>
-                `;
+                <div class="disease-list">
+                    <h3>Possible Conditions:</h3>
+                    ${diseasesHTML}
+                </div>
                 
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                <div class="sms-alert" id="smsAlert">
+                    <i class="fas fa-sms alert-icon"></i>
+                    <strong>Alert Sent:</strong> An SMS has been sent to health authorities (18605001066) for immediate action.
+                </div>
                 
-                showNotification('No water-borne disease detected. Your health is good!', 'success');
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
+                </div>
+            `;
+            
+            // Show SMS alert if high risk
+            if (riskLevel === "high") {
+                const smsAlert = document.getElementById('smsAlert');
+                if (smsAlert) {
+                    smsAlert.style.display = 'block';
+                }
+            }
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Show notification based on risk level
+            if (riskLevel === "high") {
+                showNotification('High risk detected! SMS alert sent to health authorities.', 'warning');
+            } else if (riskLevel === "medium") {
+                showNotification('Medium risk detected. Please consult a healthcare professional.', 'warning');
+            } else {
+                showNotification('No serious water-borne disease detected. Your health is good!', 'success');
             }
         }
         
@@ -740,13 +806,15 @@
             // Simulate SMS sending to the provided number
             console.log(`SMS sent to 18605001066: ${message}`);
             
-            // Show SMS alert in UI
-            const smsAlert = document.getElementById('smsAlert');
-            if (smsAlert) {
-                smsAlert.style.display = 'block';
-            }
-            
-            showNotification('SMS alert sent to health authorities', 'success');
+            // In a real implementation, you would use an API like:
+            // fetch('https://sms-api.example.com/send', {
+            //   method: 'POST',
+            //   headers: { 'Content-Type': 'application/json' },
+            //   body: JSON.stringify({
+            //     to: '18605001066',
+            //     message: message
+            //   })
+            // });
         }
         
         // Show notification
@@ -777,5 +845,4 @@
         document.addEventListener('DOMContentLoaded', initSymptomsGrid);
     </script>
 </body>
-
 </html>
