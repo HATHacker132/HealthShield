@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Smart Health Surveillance</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background: #2a9d8f;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #264653;
+      margin-bottom: 30px;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 8px;
+      margin: 15px 0;
+      padding: 15px 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .faq-item h3 {
+      margin: 0;
+      color: #2a9d8f;
+      font-size: 18px;
+    }
+
+    .faq-answer {
+      display: none;
+      margin-top: 10px;
+      color: #555;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    footer {
+      background: #264653;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Frequently Asked Questions</h1>
+    <p>Smart Health Surveillance and Early Warning System</p>
+  </header>
+
+  <div class="container">
+    <h2>FAQs</h2>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>1. What is the purpose of this system?</h3>
+      <div class="faq-answer">
+        The system helps detect early signs of water-borne and seasonal diseases in rural areas. 
+        By collecting community reports and analyzing them with AI, it sends alerts before outbreaks spread.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>2. Who can use this platform?</h3>
+      <div class="faq-answer">
+        Villagers, health workers, and government health officials can use the platform. 
+        Villagers report symptoms, health workers validate data, and officials receive alerts with hotspot details.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>3. How are the alerts generated?</h3>
+      <div class="faq-answer">
+        When many users from the same area report similar symptoms, 
+        the system identifies a hotspot and sends an SMS alert to the health department helpline.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>4. Is my personal data safe?</h3>
+      <div class="faq-answer">
+        Yes. All data is encrypted and only shared with authorized health officials. 
+        No personal data is sold or shared with third parties.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>5. What diseases can this system detect?</h3>
+      <div class="faq-answer">
+        The platform mainly focuses on water-borne diseases such as Cholera, Typhoid, Hepatitis A, 
+        and other common rural outbreaks like Dengue, Malaria, and Diarrheal diseases.
+      </div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <h3>6. What should I do if I receive an alert?</h3>
+      <div class="faq-answer">
+        If you receive an alert, follow health guidelines, contact your local health worker, 
+        and take preventive steps like drinking clean water, using mosquito nets, and seeking medical advice.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Day Tech | Team Day Tech</p>
+  </footer>
+
+  <script>
+    function toggleFAQ(item) {
+      let answer = item.querySelector(".faq-answer");
+      answer.style.display = answer.style.display === "block" ? "none" : "block";
+    }
+  </script>
+
+</body>
+</html>
