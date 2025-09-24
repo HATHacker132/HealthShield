@@ -330,6 +330,34 @@
         .notification-warning .notification-icon {
             color: var(--alert-red);
         }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            display: none;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary-green);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         
         /* Footer */
         footer {
@@ -439,7 +467,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Mobile Number (optional)</label>
+                    <label class="form-label">Mobile Number</label>
                     <input type="tel" class="form-input" id="userMobile" placeholder="Enter your mobile number">
                 </div>
                 
@@ -481,6 +509,11 @@
         </div>
     </div>
 
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -515,52 +548,6 @@
             { id: 12, name: "Rapid heart rate", icon: "fas fa-heart", waterBorne: true }
         ];
         
-        // Water-borne diseases data with risk levels
-        const waterBorneDiseases = [
-            {
-                name: "Cholera",
-                symptoms: [2, 3, 5, 8, 9, 11],
-                description: "Acute diarrheal illness caused by infection of the intestine with Vibrio cholerae bacteria",
-                riskLevel: "high",
-                severity: 9
-            },
-            {
-                name: "Typhoid",
-                symptoms: [1, 2, 4, 8, 9],
-                description: "Bacterial infection caused by Salmonella typhi that can spread throughout the body",
-                riskLevel: "high",
-                severity: 8
-            },
-            {
-                name: "Hepatitis A",
-                symptoms: [1, 4, 6, 8, 9],
-                description: "Highly contagious liver infection caused by the hepatitis A virus",
-                riskLevel: "medium",
-                severity: 6
-            },
-            {
-                name: "Dysentery",
-                symptoms: [2, 4, 5, 9, 11],
-                description: "Intestinal inflammation causing severe diarrhea with blood or mucus in the feces",
-                riskLevel: "medium",
-                severity: 7
-            },
-            {
-                name: "Giardiasis",
-                symptoms: [2, 4, 8, 9, 10],
-                description: "Intestinal infection caused by the giardia parasite, spread through contaminated water",
-                riskLevel: "medium",
-                severity: 5
-            },
-            {
-                name: "General Digestive Issues",
-                symptoms: [2, 4, 9],
-                description: "Minor digestive discomfort that may be related to food or water",
-                riskLevel: "low",
-                severity: 3
-            }
-        ];
-        
         // Selected symptoms and user data
         let selectedSymptoms = [];
         let userData = {};
@@ -571,7 +558,13 @@
         const resultsSection = document.getElementById('resultsSection');
         const notification = document.getElementById('notification');
         const notificationMessage = document.getElementById('notificationMessage');
-        
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Function to show/hide loading overlay
+        function showLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
         // Initialize symptoms grid
         function initSymptomsGrid() {
             symptoms.forEach(symptom => {
@@ -604,7 +597,7 @@
             const age = document.getElementById('userAge').value.trim();
             const gender = document.getElementById('userGender').value;
             const village = document.getElementById('userVillage').value.trim();
-            //const mobile = document.getElementById('userMobile').value.trim();
+            const mobile = document.getElementById('userMobile').value.trim();
             
             if (!name) {
                 showNotification('Please enter your name', 'warning');
@@ -627,25 +620,25 @@
             }
             
             // if (!mobile || mobile.length !== 10 || isNaN(mobile)) {
-            //     showNotification('Please enter a valid 10-digit mobile number', 'warning');
-            //     return false;
+            //      showNotification('Please enter a valid 10-digit mobile number', 'warning');
+            //      return false;
             // }
-            
+
             // Store user data
             userData = {
                 name,
                 age,
                 gender,
                 village,
-                //mobile,
+                mobile,
                 email: document.getElementById('userEmail').value.trim()
             };
             
             return true;
         }
         
-        // Analyze symptoms for water-borne diseases
-        function analyzeSymptoms() {
+        // Main function to send data to the backend API
+        async function analyzeSymptoms() {
             if (selectedSymptoms.length === 0) {
                 showNotification('Please select at least one symptom', 'warning');
                 return;
@@ -655,60 +648,51 @@
                 return;
             }
             
-            // Check for water-borne disease symptoms
-            const hasWaterBorneSymptoms = selectedSymptoms.some(symptomId => {
-                const symptom = symptoms.find(s => s.id === symptomId);
-                return symptom.waterBorne;
-            });
+            showLoading(true);
             
-            // Find matching water-borne diseases and calculate risk score
-            let matchingDiseases = [];
-            let totalRiskScore = 0;
-            
-            waterBorneDiseases.forEach(disease => {
-                const matchedSymptoms = disease.symptoms.filter(symptom => 
-                    selectedSymptoms.includes(symptom)
-                );
+            try {
+                const response = await fetch('http://localhost:5000/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: userData.name,
+                        age: parseInt(userData.age),
+                        gender: userData.gender,
+                        village: userData.village,
+                        mobile: userData.mobile,
+                        email: userData.email,
+                        symptoms: selectedSymptoms
+                    })
+                });
                 
-                if (matchedSymptoms.length > 0) {
-                    // Calculate match percentage
-                    const matchPercentage = (matchedSymptoms.length / disease.symptoms.length) * 100;
-                    
-                    // Only include diseases with at least 30% symptom match
-                    if (matchPercentage >= 30) {
-                        const diseaseCopy = {...disease};
-                        diseaseCopy.matchPercentage = matchPercentage;
-                        diseaseCopy.matchedSymptoms = matchedSymptoms;
-                        matchingDiseases.push(diseaseCopy);
-                        
-                        // Add to total risk score (weighted by match percentage)
-                        totalRiskScore += disease.severity * (matchPercentage / 100);
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    showResults(result.risk_level, result.matching_diseases, result.risk_score, result.sms_alert_sent);
+                    if (result.sms_alert_sent) {
+                        showNotification('High risk detected! SMS alert sent to health authorities.', 'warning');
+                    } else if (result.risk_level === 'medium') {
+                         showNotification('Medium risk detected. Please consult a healthcare professional.', 'warning');
+                    } else {
+                        showNotification('No serious water-borne disease detected. Your health is good!', 'success');
                     }
+                } else {
+                    const errorMsg = result.error || 'Unknown error occurred.';
+                    showNotification('Analysis failed: ' + errorMsg, 'warning');
+                    console.error('Backend analysis failed:', result);
                 }
-            });
-            
-            // Sort by match percentage (highest first)
-            matchingDiseases.sort((a, b) => b.matchPercentage - a.matchPercentage);
-            
-            // Determine overall risk level
-            let overallRiskLevel = "low";
-            if (totalRiskScore >= 15) {
-                overallRiskLevel = "high";
-            } else if (totalRiskScore >= 8) {
-                overallRiskLevel = "medium";
-            }
-            
-            // Show results
-            showResults(hasWaterBorneSymptoms, matchingDiseases, overallRiskLevel, totalRiskScore);
-            
-            // Send SMS alert if high risk water-borne disease detected
-            if (overallRiskLevel === "high" && matchingDiseases.length > 0) {
-                sendSMSAlert(matchingDiseases);
+            } catch (error) {
+                console.error('Network or server error:', error);
+                showNotification('Connection error. Please ensure the backend server is running.', 'warning');
+            } finally {
+                showLoading(false);
             }
         }
         
         // Show results
-        function showResults(hasWaterBorneDisease, diseases, riskLevel, riskScore) {
+        function showResults(riskLevel, diseases, riskScore, smsAlertSent) {
             resultsSection.style.display = 'block';
             
             let riskClass = "risk-low";
@@ -739,10 +723,10 @@
                         <div class="disease-item">
                             <div class="disease-name">
                                 <i class="fas fa-bacteria disease-icon"></i>
-                                ${disease.name} (${disease.riskLevel} risk)
+                                ${disease.name} (${disease.risk_level} risk)
                             </div>
                             <p>${disease.description}</p>
-                            <p><strong>Symptom match:</strong> ${Math.round(disease.matchPercentage)}%</p>
+                            <p><strong>Symptom match:</strong> ${Math.round(disease.match_percentage)}%</p>
                         </div>
                     `;
                 });
@@ -766,7 +750,7 @@
                     ${diseasesHTML}
                 </div>
                 
-                <div class="sms-alert" id="smsAlert">
+                <div class="sms-alert" id="smsAlert" style="display: ${smsAlertSent ? 'block' : 'none'};">
                     <i class="fas fa-sms alert-icon"></i>
                     <strong>Alert Sent:</strong> An SMS has been sent to health authorities (18605001066) for immediate action.
                 </div>
@@ -776,45 +760,8 @@
                 </div>
             `;
             
-            // Show SMS alert if high risk
-            if (riskLevel === "high") {
-                const smsAlert = document.getElementById('smsAlert');
-                if (smsAlert) {
-                    smsAlert.style.display = 'block';
-                }
-            }
-            
             // Scroll to results
             resultsSection.scrollIntoView({ behavior: 'smooth' });
-            
-            // Show notification based on risk level
-            if (riskLevel === "high") {
-                showNotification('High risk detected! SMS alert sent to health authorities.', 'warning');
-            } else if (riskLevel === "medium") {
-                showNotification('Medium risk detected. Please consult a healthcare professional.', 'warning');
-            } else {
-                showNotification('No serious water-borne disease detected. Your health is good!', 'success');
-            }
-        }
-        
-        // Simulate sending SMS alert
-        function sendSMSAlert(diseases) {
-            // In a real implementation, this would connect to an SMS gateway API
-            const diseaseNames = diseases.map(d => d.name).join(', ');
-            const message = `ALERT: Possible water-borne disease (${diseaseNames}) detected for ${userData.name}, ${userData.age} years, ${userData.village} village. Contact: ${userData.mobile}.`;
-            
-            // Simulate SMS sending to the provided number
-            console.log(`SMS sent to 18605001066: ${message}`);
-            
-            // In a real implementation, you would use an API like:
-            // fetch('https://sms-api.example.com/send', {
-            //   method: 'POST',
-            //   headers: { 'Content-Type': 'application/json' },
-            //   body: JSON.stringify({
-            //     to: '18605001066',
-            //     message: message
-            //   })
-            // });
         }
         
         // Show notification
