@@ -1,643 +1,382 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gradient-to-br from-blue-50 to-indigo-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealthShield - Disease Detection & Alert System</title>
+    <title>HealthShield - Symptom Checker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-green: #2E8B57;
-            --light-green: #3CB371;
-            --dark-green: #1D5D38;
-            --primary-blue: #1E90FF;
-            --light-blue: #6495ED;
-            --alert-red: #FF4500;
-            --light-red: #FF7F50;
-            --white: #FFFFFF;
-            --light-gray: #F5F5F5;
-            --dark-gray: #333333;
-            --mid-gray: #666666;
-            --low-risk: #4CAF50;
-            --medium-risk: #FF9800;
-            --high-risk: #F44336;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--dark-gray);
-            line-height: 1.6;
-            background-color: var(--light-gray);
+            font-family: 'Inter', sans-serif;
         }
-        
-        h1, h2, h3, h4, h5 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        
         .container {
+            max-width: 900px;
+        }
+        
+        /* Custom styles */
+        .form-input {
             width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            color: #4b5563;
+            transition: all 0.2s ease-in-out;
         }
-        
-        /* Header Styles */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-        
-        .logo-icon {
-            font-size: 28px;
-            color: var(--primary-green);
-            margin-right: 10px;
-        }
-        
-        .logo-text {
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--dark-gray);
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"><rect fill="%231D5D38" width="800" height="400"/><path fill="%232E8B57" fill-opacity="0.5" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,261.3C672,256,768,224,864,224C960,224,1056,256,1152,245.3C1248,235,1344,181,1392,154.7L1440,128L1440,400L1392,400C1344,400,1248,400,1152,400C1056,400,960,400,864,400C768,400,672,400,576,400C480,400,384,400,288,400C192,400,96,400,48,400L0,400Z"></path></svg>');
-            background-size: cover;
-            background-position: center;
-            padding: 80px 0;
-            color: var(--white);
-            text-align: center;
-        }
-        
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* Main Content */
-        .main-content {
-            padding: 40px 0;
-        }
-        
-        .form-section {
-            background-color: var(--white);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--dark-green);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light-green);
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-input, .form-select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        
-        .form-input:focus, .form-select:focus {
+        .form-input:focus {
             outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 2px rgba(30, 144, 255, 0.2);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+        .form-input::placeholder {
+            color: #9ca3af;
         }
         
-        .symptoms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+        /* Animation classes */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .symptom-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(79, 70, 229, 0.4); }
         }
         
-        .symptom-item:hover {
-            background-color: #e9e9e9;
+        .symptom-checkbox:checked + .symptom-label {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
         }
         
-        .symptom-item.selected {
-            background-color: var(--light-green);
-            color: var(--white);
-        }
+        .risk-low { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .risk-medium { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .risk-high { background: linear-gradient(135deg, #fee2e2, #fecaca); }
         
-        .symptom-icon {
-            margin-right: 10px;
-            font-size: 18px;
-        }
+        .risk-text-low { color: #065f46; }
+        .risk-text-medium { color: #92400e; }
+        .risk-text-high { color: #991b1b; }
         
-        .form-actions {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-green);
-            color: var(--white);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--dark-green);
-            transform: translateY(-3px);
-        }
-        
-        /* Results Section */
-        .results-section {
-            background-color: var(--white);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-            display: none;
-        }
-        
-        .risk-low {
-            border-left: 5px solid var(--low-risk);
-        }
-        
-        .risk-medium {
-            border-left: 5px solid var(--medium-risk);
-        }
-        
-        .risk-high {
-            border-left: 5px solid var(--high-risk);
-        }
-        
-        .risk-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .risk-icon {
-            margin-right: 10px;
-            font-size: 24px;
-        }
-        
-        .risk-desc {
-            margin-bottom: 20px;
-        }
-        
-        .disease-list {
-            margin-bottom: 20px;
-        }
-        
-        .disease-item {
-            padding: 15px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .disease-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .disease-icon {
-            margin-right: 10px;
-        }
-        
-        .sms-alert {
-            background-color: #FFF3CD;
-            border-left: 5px solid #FFC107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .alert-icon {
-            color: #856404;
-            margin-right: 10px;
-        }
-        
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            background-color: var(--white);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            z-index: 2000;
-            transform: translateX(150%);
-            transition: transform 0.5s ease-in-out;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification-success {
-            border-left: 4px solid var(--primary-green);
-        }
-        
-        .notification-warning {
-            border-left: 4px solid var(--alert-red);
-        }
-        
-        .notification-icon {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-        
-        .notification-success .notification-icon {
-            color: var(--primary-green);
-        }
-        
-        .notification-warning .notification-icon {
-            color: var(--alert-red);
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-            display: none;
-        }
-
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid var(--primary-green);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--dark-gray);
-            color: var(--white);
-            padding: 40px 0 20px;
-            text-align: center;
-        }
-        
-        .footer-content {
-            margin-bottom: 20px;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .footer-link {
-            color: #CCC;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-link:hover {
-            color: var(--primary-green);
-        }
-        
-        .footer-bottom {
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .symptoms-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1rem;
-            }
+        .icon-bg {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
         }
     </style>
 </head>
-<body>
-    <!-- Header Section -->
-    <header>
-        <div class="container header-container">
-            <a href="#" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-shield-heart"></i>
+<body class="min-h-screen flex items-center justify-center p-4 py-8">
+    <!-- Main Card -->
+    <div id="main-card" class="container bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+        <!-- Header with gradient -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 lg:p-8 text-white">
+            <div class="flex items-center justify-center mb-4">
+                <div class="icon-bg rounded-full p-3 mr-3">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
                 </div>
-                <div class="logo-text">HealthShield</div>
-            </a>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1 class="hero-title">Health Surveillance for Rural India</h1>
-            <p class="hero-subtitle">Report symptoms, detect diseases early, and receive immediate alerts. Helping communities fight water-borne diseases through early detection.</p>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="container main-content">
-        <!-- User Information Form -->
-        <section class="form-section">
-            <h2 class="section-title">Personal Information</h2>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" class="form-input" id="userName" placeholder="Enter your full name">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Age</label>
-                    <input type="number" class="form-input" id="userAge" placeholder="Enter your age">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Gender</label>
-                    <select class="form-select" id="userGender">
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Village Name</label>
-                    <input type="text" class="form-input" id="userVillage" placeholder="Enter your village name">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mobile Number</label>
-                    <input type="tel" class="form-input" id="userMobile" placeholder="Enter your mobile number">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Email Address (optional)</label>
-                    <input type="email" class="form-input" id="userEmail" placeholder="Enter your email address">
-                </div>
+                <h1 class="text-3xl lg:text-4xl font-extrabold">HealthShield</h1>
             </div>
-        </section>
+            <p class="text-center text-indigo-100 max-w-lg mx-auto text-lg">
+                Advanced tool to identify potential water-borne disease risks based on your symptoms
+            </p>
+        </div>
         
-        <!-- Symptoms Input Section -->
-        <section class="form-section">
-            <h2 class="section-title">Select Your Symptoms</h2>
-            <p>Select all symptoms you are currently experiencing:</p>
-            
-            <div class="symptoms-grid" id="symptomsGrid">
-                <!-- Symptoms will be added here by JavaScript -->
+        <div class="p-6 lg:p-8 space-y-8">
+            <!-- User Information Form -->
+            <div id="user-info-section" class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200 space-y-4">
+                <div class="flex items-center">
+                    <i class="fas fa-user-circle text-indigo-500 text-xl mr-2"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Your Information</h2>
+                </div>
+                <form id="user-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                        <input type="text" id="userName" placeholder="Enter your full name" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="userAge" class="block text-sm font-medium text-gray-700 mb-1">Age *</label>
+                        <input type="number" id="userAge" placeholder="Your age" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="userGender" class="block text-sm font-medium text-gray-700 mb-1">Gender *</label>
+                        <select id="userGender" required class="form-input">
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="userVillage" class="block text-sm font-medium text-gray-700 mb-1">Village / Area *</label>
+                        <input type="text" id="userVillage" placeholder="Your village or area" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="userMobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                        <input type="tel" id="userMobile" placeholder="Optional contact number" class="form-input">
+                    </div>
+                    <div>
+                        <label for="userEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="userEmail" placeholder="Optional email address" class="form-input">
+                    </div>
+                </form>
             </div>
-            
-            <div class="form-actions">
-                <button id="analyzeSymptoms" class="btn btn-primary">Analyze Symptoms</button>
+
+            <!-- Symptoms Section -->
+            <div id="symptoms-section" class="space-y-6">
+                <div class="flex items-center">
+                    <i class="fas fa-stethoscope text-indigo-500 text-xl mr-2"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Select Your Symptoms</h2>
+                </div>
+                <div id="symptom-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Symptoms will be dynamically loaded here -->
+                </div>
+                <p class="text-sm text-gray-500 text-center">
+                    <i class="fas fa-info-circle mr-1"></i> Select all symptoms that apply to you.
+                </p>
             </div>
-        </section>
-        
-        <!-- Results Section -->
-        <section class="results-section" id="resultsSection">
-            <!-- Results will be displayed here by JavaScript -->
-        </section>
-    </div>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <div class="notification-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="notification-content">
-            <div class="notification-title">Success!</div>
-            <div class="notification-message" id="notificationMessage">Your information has been received successfully.</div>
+
+            <!-- Submission and Loading -->
+            <div class="space-y-4">
+                <button id="analyzeBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 pulse-glow">
+                    <i class="fas fa-search-medical mr-2"></i> Analyze Symptoms
+                </button>
+                <div id="loading" class="hidden text-center text-gray-600">
+                    <div class="inline-flex items-center bg-blue-50 p-4 rounded-xl">
+                        <svg class="animate-spin h-6 w-6 text-blue-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p>Analyzing your symptoms...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Display -->
+            <div id="results" class="hidden rounded-2xl border border-gray-200 overflow-hidden space-y-4 text-center">
+                <div id="results-header" class="p-4 text-white">
+                    <h2 class="text-2xl font-bold"><i class="fas fa-clipboard-check mr-2"></i>Analysis Results</h2>
+                </div>
+                <div class="p-6">
+                    <p id="risk-level" class="text-3xl font-extrabold mb-2"></p>
+                    <p id="result-message" class="text-lg mb-4"></p>
+                    <ul id="detected-diseases" class="space-y-2 mx-auto max-w-md text-left"></ul>
+                    <p class="text-sm text-gray-500 mt-6">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> For an accurate diagnosis, please consult a qualified healthcare professional.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
+    <!-- Notification and Modal -->
+    <div id="notification-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm space-y-4 animate-fade-in">
+            <div id="modal-icon" class="text-center text-4xl"></div>
+            <h3 id="modal-title" class="text-xl font-bold text-center"></h3>
+            <p id="modal-message" class="text-center text-gray-600"></p>
+            <button id="modal-close-btn" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition">OK</button>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <!-- <div class="footer-links">
-                    <a href="#" class="footer-link">About Us</a>
-                    <a href="#" class="footer-link">Privacy Policy</a>
-                    <a href="#" class="footer-link">Contact</a>
-                    <a href="#" class="footer-link">FAQ</a>
-                </div> -->
-            </div>
-            <div class="footer-bottom">
-                <p>Developed by Team Day Tech</p>
-            </div>
-        </div>
-    </footer>
-
+    <!-- JavaScript Logic -->
     <script>
-        // Symptom data - focusing on water-borne diseases
-        const symptoms = [
-            { id: 1, name: "Fever", icon: "fas fa-temperature-high", waterBorne: true },
-            { id: 2, name: "Diarrhea", icon: "fas fa-poop", waterBorne: true },
-            { id: 3, name: "Vomiting", icon: "fas fa-vomit", waterBorne: true },
-            { id: 4, name: "Abdominal pain", icon: "fas fa-stomach", waterBorne: true },
-            { id: 5, name: "Dehydration", icon: "fas fa-tint", waterBorne: true },
-            { id: 6, name: "Headache", icon: "fas fa-head-side-brain", waterBorne: false },
-            { id: 7, name: "Muscle aches", icon: "fas fa-dumbbell", waterBorne: false },
-            { id: 8, name: "Loss of appetite", icon: "fas fa-utensils", waterBorne: true },
-            { id: 9, name: "Nausea", icon: "fas fa-stomach", waterBorne: true },
-            { id: 10, name: "Fatigue", icon: "fas fa-bed", waterBorne: false },
-            { id: 11, name: "Blood in stool", icon: "fas fa-first-aid", waterBorne: true },
-            { id: 12, name: "Rapid heart rate", icon: "fas fa-heart", waterBorne: true }
+        // Set the base URL for the backend API.
+        // CHANGE THIS TO YOUR LIVE SERVER URL AFTER DEPLOYMENT
+        const BASE_API_URL = 'https://web-production-4b6b9.up.railway.app/';
+
+        // Symptom data
+        const SYMPTOMS = [
+            { id: 1, name: "Fever", icon: "fas fa-thermometer-half" },
+            { id: 2, name: "Stomach Ache", icon: "fas fa-stomach" },
+            { id: 3, name: "Vomiting", icon: "fas fa-procedures" },
+            { id: 4, name: "Headache", icon: "fas fa-head-side-virus" },
+            { id: 5, name: "Dehydration", icon: "fas fa-tint-slash" },
+            { id: 6, name: "Jaundice", icon: "fas fa-sun" },
+            { id: 7, name: "Rash", icon: "fas fa-allergies" },
+            { id: 8, name: "Weakness", icon: "fas fa-tired" },
+            { id: 9, name: "Diarrhea", icon: "fas fa-toilet" },
+            { id: 10, name: "Muscle Aches", icon: "fas fa-dumbbell" },
+            { id: 11, name: "Blood in Stool", icon: "fas fa-tint" },
+            { id: 12, name: "Cough", icon: "fas fa-lungs-virus" }
         ];
-        
-        // Selected symptoms and user data
+
+        // UI elements
+        const symptomListEl = document.getElementById('symptom-list');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingEl = document.getElementById('loading');
+        const resultsEl = document.getElementById('results');
+        const resultsHeader = document.getElementById('results-header');
+        const userForm = document.getElementById('user-form');
+        const notificationModal = document.getElementById('notification-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
         let selectedSymptoms = [];
         let userData = {};
-        
-        // DOM elements
-        const symptomsGrid = document.getElementById('symptomsGrid');
-        const analyzeBtn = document.getElementById('analyzeSymptoms');
-        const resultsSection = document.getElementById('resultsSection');
-        const notification = document.getElementById('notification');
-        const notificationMessage = document.getElementById('notificationMessage');
-        const loadingOverlay = document.getElementById('loadingOverlay');
 
-        // Function to show/hide loading overlay
-        function showLoading(show) {
-            loadingOverlay.style.display = show ? 'flex' : 'none';
+        // Function to create a custom notification modal
+        function showNotification(message, type) {
+            let icon = '';
+            let title = '';
+            let iconColor = '';
+            
+            if (type === 'success') {
+                title = 'Success!';
+                icon = '✅';
+                iconColor = 'text-green-500';
+            } else if (type === 'warning') {
+                title = 'Warning!';
+                icon = '⚠️';
+                iconColor = 'text-yellow-500';
+            } else if (type === 'error') {
+                title = 'Error!';
+                icon = '❌';
+                iconColor = 'text-red-500';
+            }
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalIcon.textContent = icon;
+            modalIcon.className = `text-center text-4xl ${iconColor}`;
+            notificationModal.classList.remove('hidden');
+            notificationModal.classList.add('flex');
         }
 
-        // Initialize symptoms grid
-        function initSymptomsGrid() {
-            symptoms.forEach(symptom => {
-                const symptomElement = document.createElement('div');
-                symptomElement.className = 'symptom-item';
-                symptomElement.dataset.id = symptom.id;
-                symptomElement.innerHTML = `
-                    <div class="symptom-icon"><i class="${symptom.icon}"></i></div>
-                    <div class="symptom-name">${symptom.name}</div>
-                `;
-                
-                symptomElement.addEventListener('click', () => {
-                    symptomElement.classList.toggle('selected');
-                    const symptomId = symptom.id;
-                    
-                    if (selectedSymptoms.includes(symptomId)) {
-                        selectedSymptoms = selectedSymptoms.filter(id => id !== symptomId);
+        modalCloseBtn.addEventListener('click', () => {
+            notificationModal.classList.add('hidden');
+            notificationModal.classList.remove('flex');
+        });
+
+        // Function to render the symptom list
+        function renderSymptoms() {
+            symptomListEl.innerHTML = SYMPTOMS.map(symptom => `
+                <div class="relative">
+                    <input type="checkbox" id="symptom-${symptom.id}" data-id="${symptom.id}" class="symptom-checkbox absolute opacity-0 h-0 w-0">
+                    <label for="symptom-${symptom.id}" class="symptom-label flex flex-col items-center justify-center p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-all duration-300 h-full">
+                        <i class="${symptom.icon} text-2xl text-gray-600 mb-2"></i>
+                        <span class="text-sm font-medium text-gray-700 text-center">${symptom.name}</span>
+                    </label>
+                </div>
+            `).join('');
+            
+            symptomListEl.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    if (e.target.checked) {
+                        selectedSymptoms.push(id);
                     } else {
-                        selectedSymptoms.push(symptomId);
+                        selectedSymptoms = selectedSymptoms.filter(s => s !== id);
                     }
                 });
-                
-                symptomsGrid.appendChild(symptomElement);
             });
         }
-        
-        // Validate user form
+
+        // Function to validate user form data
         function validateForm() {
             const name = document.getElementById('userName').value.trim();
             const age = document.getElementById('userAge').value.trim();
             const gender = document.getElementById('userGender').value;
             const village = document.getElementById('userVillage').value.trim();
-            const mobile = document.getElementById('userMobile').value.trim();
             
             if (!name) {
                 showNotification('Please enter your name', 'warning');
                 return false;
             }
-            
             if (!age || age < 1 || age > 120) {
                 showNotification('Please enter a valid age', 'warning');
                 return false;
             }
-            
             if (!gender) {
                 showNotification('Please select your gender', 'warning');
                 return false;
             }
-            
             if (!village) {
                 showNotification('Please enter your village name', 'warning');
                 return false;
             }
             
-            // if (!mobile || mobile.length !== 10 || isNaN(mobile)) {
-            //      showNotification('Please enter a valid 10-digit mobile number', 'warning');
-            //      return false;
-            // }
-
-            // Store user data
             userData = {
-                name,
-                age,
-                gender,
-                village,
-                mobile,
-                email: document.getElementById('userEmail').value.trim()
+                name: name,
+                age: parseInt(age),
+                gender: gender,
+                village: village,
+                mobile: document.getElementById('userMobile').value.trim() || null,
+                email: document.getElementById('userEmail').value.trim() || null
             };
             
             return true;
         }
-        
-        // Main function to send data to the backend API
+
+        // Function to show/hide loading indicator
+        function showLoading(show) {
+            loadingEl.classList.toggle('hidden', !show);
+            analyzeBtn.disabled = show;
+            analyzeBtn.classList.toggle('opacity-50', show);
+            analyzeBtn.classList.toggle('pulse-glow', !show);
+        }
+
+        // Function to show analysis results
+        function showResults(riskLevel, matchingDiseases, riskScore) {
+            const riskLevelEl = document.getElementById('risk-level');
+            const resultMessageEl = document.getElementById('result-message');
+            const detectedDiseasesEl = document.getElementById('detected-diseases');
+
+            riskLevelEl.textContent = `${riskLevel.toUpperCase()} RISK DETECTED`;
+            
+            // Set risk-specific styling
+            let riskClass = 'risk-low';
+            let riskTextClass = 'risk-text-low';
+            let riskHeaderClass = 'bg-gradient-to-r from-green-500 to-emerald-500';
+            
+            if (riskLevel === 'medium') {
+                riskClass = 'risk-medium';
+                riskTextClass = 'risk-text-medium';
+                riskHeaderClass = 'bg-gradient-to-r from-yellow-500 to-amber-500';
+            } else if (riskLevel === 'high') {
+                riskClass = 'risk-high';
+                riskTextClass = 'risk-text-high';
+                riskHeaderClass = 'bg-gradient-to-r from-red-500 to-pink-500';
+            }
+            
+            resultsEl.className = `rounded-2xl border border-gray-200 overflow-hidden space-y-4 text-center ${riskClass}`;
+            resultsHeader.className = `p-4 text-white ${riskHeaderClass}`;
+            riskLevelEl.className = `text-3xl font-extrabold mb-2 ${riskTextClass}`;
+            
+            detectedDiseasesEl.innerHTML = '';
+            if (matchingDiseases && matchingDiseases.length > 0) {
+                resultMessageEl.textContent = 'Potential water-borne diseases based on your symptoms:';
+                matchingDiseases.forEach(disease => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center bg-white bg-opacity-70 p-2 rounded-lg';
+                    li.innerHTML = `
+                        <i class="fas fa-virus text-red-500 mr-2"></i>
+                        <span class="font-medium">${disease.name}</span>
+                        <span class="ml-auto bg-gray-100 px-2 py-1 rounded text-sm font-semibold">${disease.match_percentage.toFixed(0)}% match</span>
+                    `;
+                    detectedDiseasesEl.appendChild(li);
+                });
+            } else {
+                resultMessageEl.textContent = 'No serious water-borne disease detected. Your health appears good!';
+            }
+            
+            resultsEl.classList.remove('hidden');
+            resultsEl.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Main function to analyze symptoms
         async function analyzeSymptoms() {
             if (selectedSymptoms.length === 0) {
                 showNotification('Please select at least one symptom', 'warning');
@@ -649,16 +388,17 @@
             }
             
             showLoading(true);
-            
+            resultsEl.classList.add('hidden');
+
             try {
-                const response = await fetch('http://localhost:5000/api/analyze', {
+                const response = await fetch(`${BASE_API_URL}/api/analyze`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         name: userData.name,
-                        age: parseInt(userData.age),
+                        age: userData.age,
                         gender: userData.gender,
                         village: userData.village,
                         mobile: userData.mobile,
@@ -670,126 +410,28 @@
                 const result = await response.json();
                 
                 if (response.ok && result.success) {
-                    showResults(result.risk_level, result.matching_diseases, result.risk_score, result.sms_alert_sent);
-                    if (result.sms_alert_sent) {
-                        showNotification('High risk detected! SMS alert sent to health authorities.', 'warning');
-                    } else if (result.risk_level === 'medium') {
-                         showNotification('Medium risk detected. Please consult a healthcare professional.', 'warning');
-                    } else {
-                        showNotification('No serious water-borne disease detected. Your health is good!', 'success');
-                    }
+                    showResults(result.risk_level, result.matching_diseases, result.risk_score);
+                    showNotification(result.message, result.risk_level === 'high' ? 'warning' : 'success');
                 } else {
                     const errorMsg = result.error || 'Unknown error occurred.';
-                    showNotification('Analysis failed: ' + errorMsg, 'warning');
-                    console.error('Backend analysis failed:', result);
+                    showNotification('Analysis failed: ' + errorMsg, 'error');
                 }
             } catch (error) {
                 console.error('Network or server error:', error);
-                showNotification('Connection error. Please ensure the backend server is running.', 'warning');
+                showNotification('Connection error. Please ensure the backend server is running.', 'error');
             } finally {
                 showLoading(false);
             }
         }
-        
-        // Show results
-        function showResults(riskLevel, diseases, riskScore, smsAlertSent) {
-            resultsSection.style.display = 'block';
-            
-            let riskClass = "risk-low";
-            let riskIcon = "fas fa-check-circle";
-            let riskTitle = "Low Risk Detected";
-            let riskDescription = "";
-            
-            if (riskLevel === "medium") {
-                riskClass = "risk-medium";
-                riskIcon = "fas fa-exclamation-triangle";
-                riskTitle = "Medium Risk Detected";
-                riskDescription = "<p>Your symptoms suggest a possible water-borne disease. Please consult a healthcare professional soon.</p>";
-            } else if (riskLevel === "high") {
-                riskClass = "risk-high";
-                riskIcon = "fas fa-exclamation-circle";
-                riskTitle = "High Risk Detected";
-                riskDescription = "<p>Your symptoms suggest a serious water-borne disease. Please consult a healthcare professional immediately.</p>";
-            } else {
-                riskDescription = "<p>Your symptoms do not suggest a serious water-borne disease. However, if you're feeling unwell, please consult a healthcare professional.</p>";
-            }
-            
-            resultsSection.className = `results-section ${riskClass}`;
-            
-            let diseasesHTML = '';
-            if (diseases.length > 0) {
-                diseases.forEach(disease => {
-                    diseasesHTML += `
-                        <div class="disease-item">
-                            <div class="disease-name">
-                                <i class="fas fa-bacteria disease-icon"></i>
-                                ${disease.name} (${disease.risk_level} risk)
-                            </div>
-                            <p>${disease.description}</p>
-                            <p><strong>Symptom match:</strong> ${Math.round(disease.match_percentage)}%</p>
-                        </div>
-                    `;
-                });
-            } else {
-                diseasesHTML = `<p>No specific water-borne diseases identified based on your symptoms.</p>`;
-            }
-            
-            resultsSection.innerHTML = `
-                <div class="risk-title">
-                    <i class="${riskIcon} risk-icon"></i>
-                    ${riskTitle}
-                </div>
-                <div class="risk-desc">
-                    ${riskDescription}
-                    <p><strong>User Information:</strong> ${userData.name}, ${userData.age} years, ${userData.village} village</p>
-                    <p><strong>Risk Score:</strong> ${riskScore.toFixed(1)}/25</p>
-                </div>
-                
-                <div class="disease-list">
-                    <h3>Possible Conditions:</h3>
-                    ${diseasesHTML}
-                </div>
-                
-                <div class="sms-alert" id="smsAlert" style="display: ${smsAlertSent ? 'block' : 'none'};">
-                    <i class="fas fa-sms alert-icon"></i>
-                    <strong>Alert Sent:</strong> An SMS has been sent to health authorities (18605001066) for immediate action.
-                </div>
-                
-                <div class="form-actions">
-                    <button class="btn btn-primary" onclick="window.location.reload()">Submit Another Report</button>
-                </div>
-            `;
-            
-            // Scroll to results
-            resultsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Show notification
-        function showNotification(message, type) {
-            notification.className = `notification notification-${type}`;
-            notificationMessage.textContent = message;
-            
-            const icon = notification.querySelector('.notification-icon');
-            icon.className = 'notification-icon';
-            
-            if (type === 'success') {
-                icon.classList.add('fas', 'fa-check-circle');
-            } else {
-                icon.classList.add('fas', 'fa-exclamation-circle');
-            }
-            
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
-        }
-        
-        // Event listeners
+
+        // Event listener for the analyze button
         analyzeBtn.addEventListener('click', analyzeSymptoms);
-        
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', initSymptomsGrid);
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSymptoms();
+        });
+
     </script>
 </body>
 </html>
