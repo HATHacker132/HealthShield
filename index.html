@@ -262,299 +262,415 @@
             border-radius: 50%;
             background: #4f46e5;
         }
+
+        /* Login page styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .login-toggle {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .login-tab.active {
+            background: white;
+            font-weight: 600;
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+        }
+        
+        .exercise-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #10b981;
+        }
+        
+        .exercise-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #d1fae5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #065f46;
+            font-size: 1.25rem;
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 py-8">
-    <!-- Main Card -->
-    <div id="main-card" class="container bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
-        <!-- Header with gradient -->
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 lg:p-8 text-white">
-            <div class="flex flex-col md:flex-row items-center justify-between mb-4">
-                <div class="flex items-center mb-4 md:mb-0">
+<body class="min-h-screen">
+    <!-- Login Page -->
+    <div id="login-page" class="login-container">
+        <div class="login-card animate-fade-in">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white text-center">
+                <div class="flex items-center justify-center mb-4">
                     <div class="icon-bg rounded-full p-3 mr-3">
                         <i class="fas fa-shield-alt text-white text-2xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl lg:text-4xl font-extrabold">HealthShield</h1>
+                        <h1 class="text-2xl font-extrabold">HealthShield</h1>
                         <p class="text-indigo-200 text-sm">Advanced Water-Borne Disease Detection</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 bg-white bg-opacity-20 p-2 rounded-lg">
-                    <div class="water-drop"></div>
-                    <span class="text-sm font-medium">Water Safety Initiative</span>
-                </div>
+                <p class="text-indigo-100 text-sm">Secure login for personalized health tracking</p>
             </div>
-            <p class="text-center text-indigo-100 max-w-2xl mx-auto text-lg">
-                Advanced tool to identify potential water-borne disease risks based on your symptoms and provide personalized health recommendations
-            </p>
-        </div>
-        
-        <div class="p-6 lg:p-8 space-y-8">
-            <!-- Progress Indicator -->
-            <div class="section-card">
-                <div class="section-header">
-                    <i class="fas fa-tasks mr-2"></i>
-                    <h2 class="text-xl font-semibold">Analysis Progress</h2>
-                </div>
-                <div class="section-content">
-                    <div class="flex justify-between mb-2">
-                        <span class="text-sm font-medium">Step 1 of 3: Complete Personal Information</span>
-                        <span class="text-sm font-medium">33%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill bg-indigo-500" style="width: 33%"></div>
-                    </div>
-                </div>
+            
+            <div class="login-toggle">
+                <div class="login-tab active" id="login-tab">Login</div>
+                <div class="login-tab" id="register-tab">New User</div>
             </div>
-
-            <!-- User Information Form -->
-            <div class="section-card">
-                <div class="section-header">
-                    <i class="fas fa-user-circle mr-2"></i>
-                    <h2 class="text-xl font-semibold">Personal Information</h2>
-                </div>
-                <div class="section-content">
-                    <p class="text-gray-600 mb-4">Please provide your details to help us personalize your health assessment.</p>
-                    <form id="user-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="userName" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="userName" placeholder="Enter your full name" required class="form-input">
-                        </div>
-                        <div>
-                            <label for="userAge" class="block text-sm font-medium text-gray-700 mb-1">Age <span class="text-red-500">*</span></label>
-                            <input type="number" id="userAge" placeholder="Your age" min="1" max="120" required class="form-input">
-                        </div>
-                        <div>
-                            <label for="userGender" class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
-                            <select id="userGender" required class="form-input">
-                                <option value="" disabled selected>Select your gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="userVillage" class="block text-sm font-medium text-gray-700 mb-1">Village / Area <span class="text-red-500">*</span></label>
-                            <input type="text" id="userVillage" placeholder="Your village or area" required class="form-input">
-                        </div>
-                        <div>
-                            <label for="userMobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
-                            <input type="tel" id="userMobile" placeholder="Optional contact number" class="form-input">
-                        </div>
-                        <div>
-                            <label for="userEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                            <input type="email" id="userEmail" placeholder="Optional email address" class="form-input">
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Symptoms Section -->
-            <div class="section-card">
-                <div class="section-header">
-                    <i class="fas fa-stethoscope mr-2"></i>
-                    <h2 class="text-xl font-semibold">Symptom Assessment</h2>
-                </div>
-                <div class="section-content">
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <button class="tab-button active" data-category="all">All Symptoms</button>
-                        <button class="tab-button" data-category="common">Common</button>
-                        <button class="tab-button" data-category="severe">Severe</button>
-                        <button class="tab-button" data-category="digestive">Digestive</button>
+            
+            <div class="p-6">
+                <!-- Login Form -->
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label for="login-user-id" class="block text-sm font-medium text-gray-700 mb-1">User ID</label>
+                        <input type="text" id="login-user-id" placeholder="Enter your User ID" required class="form-input">
                     </div>
-                    <p class="text-gray-600 mb-4">Select all symptoms you're currently experiencing. This helps us accurately assess your health risk.</p>
-                    <div id="symptom-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <!-- Symptoms will be dynamically loaded here -->
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required class="form-input">
+                        <p class="text-xs text-gray-500 mt-1">Password is your name with age (e.g., John25)</p>
                     </div>
-                    <div class="mt-4 flex items-center text-sm text-gray-500">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        <span>Selected: <span id="selected-count">0</span> symptoms</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submission and Loading -->
-            <div class="section-card">
-                <div class="section-content">
-                    <button id="analyzeBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 pulse-glow flex items-center justify-center">
-                        <i class="fas fa-search-medical mr-2"></i> Analyze Symptoms & Generate Report
+                    <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Login to HealthShield
                     </button>
-                    <div id="loading" class="hidden text-center text-gray-600 mt-4">
-                        <div class="inline-flex items-center bg-blue-50 p-4 rounded-xl">
-                            <svg class="animate-spin h-6 w-6 text-blue-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <div>
-                                <p class="font-medium">Analyzing your symptoms...</p>
-                                <p class="text-sm">This may take a few seconds</p>
-                            </div>
+                </form>
+                
+                <!-- Registration Form -->
+                <form id="register-form" class="space-y-4 hidden">
+                    <div>
+                        <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="register-name" placeholder="Enter your full name" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="register-age" class="block text-sm font-medium text-gray-700 mb-1">Age <span class="text-red-500">*</span></label>
+                        <input type="number" id="register-age" placeholder="Your age" min="1" max="120" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="register-gender" class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
+                        <select id="register-gender" required class="form-input">
+                            <option value="" disabled selected>Select your gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="register-village" class="block text-sm font-medium text-gray-700 mb-1">Village / Area <span class="text-red-500">*</span></label>
+                        <input type="text" id="register-village" placeholder="Your village or area" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="register-mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                        <input type="tel" id="register-mobile" placeholder="Optional contact number" class="form-input">
+                    </div>
+                    <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="register-email" placeholder="Optional email address" class="form-input">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300">
+                        <i class="fas fa-user-plus mr-2"></i> Create Account
+                    </button>
+                </form>
+                
+                <div id="login-message" class="mt-4 p-3 rounded-lg text-center hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden Initially) -->
+    <div id="main-app" class="hidden min-h-screen flex items-center justify-center p-4 py-8">
+        <!-- Main Card -->
+        <div id="main-card" class="container bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
+            <!-- Header with gradient and logout button -->
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 lg:p-8 text-white">
+                <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="icon-bg rounded-full p-3 mr-3">
+                            <i class="fas fa-shield-alt text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl lg:text-4xl font-extrabold">HealthShield</h1>
+                            <p class="text-indigo-200 text-sm">Advanced Water-Borne Disease Detection</p>
                         </div>
                     </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 bg-white bg-opacity-20 p-2 rounded-lg">
+                            <div class="water-drop"></div>
+                            <span class="text-sm font-medium">Water Safety Initiative</span>
+                        </div>
+                        <button id="logout-btn" class="bg-white text-indigo-600 font-semibold py-2 px-4 rounded-lg hover:bg-indigo-50 transition">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </button>
+                    </div>
                 </div>
+                <p class="text-center text-indigo-100 max-w-2xl mx-auto text-lg">
+                    Advanced tool to identify potential water-borne disease risks based on your symptoms and provide personalized health recommendations
+                </p>
             </div>
-
-            <!-- User Profile Section -->
-            <div id="user-profile-section" class="hidden section-card">
-                <div class="section-header">
-                    <i class="fas fa-user-md mr-2"></i>
-                    <h2 class="text-xl font-semibold">Patient Profile</h2>
-                    <span id="user-id-badge" class="ml-auto bg-white bg-opacity-20 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">ID: <span id="user-id-value"></span></span>
-                </div>
-                <div class="section-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <!-- Personal Information -->
-                        <div class="bg-gray-50 rounded-xl p-4">
-                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                                <i class="fas fa-id-card text-blue-500 mr-2"></i>Personal Information
-                            </h3>
-                            <div class="space-y-2">
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Full Name:</span>
-                                    <span id="profile-name" class="text-gray-800 font-semibold"></span>
+            
+            <div class="p-6 lg:p-8 space-y-8">
+                <!-- User Profile Section -->
+                <div id="user-profile-section" class="section-card">
+                    <div class="section-header">
+                        <i class="fas fa-user-md mr-2"></i>
+                        <h2 class="text-xl font-semibold">Patient Profile</h2>
+                        <span id="user-id-badge" class="ml-auto bg-white bg-opacity-20 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">ID: <span id="user-id-value"></span></span>
+                    </div>
+                    <div class="section-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Personal Information -->
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                    <i class="fas fa-id-card text-blue-500 mr-2"></i>Personal Information
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Full Name:</span>
+                                        <span id="profile-name" class="text-gray-800 font-semibold"></span>
+                                    </div>
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Age:</span>
+                                        <span id="profile-age" class="text-gray-800 font-semibold"></span>
+                                    </div>
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Gender:</span>
+                                        <span id="profile-gender" class="text-gray-800 font-semibold"></span>
+                                    </div>
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Village:</span>
+                                        <span id="profile-village" class="text-gray-800 font-semibold"></span>
+                                    </div>
                                 </div>
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Age:</span>
-                                    <span id="profile-age" class="text-gray-800 font-semibold"></span>
-                                </div>
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Gender:</span>
-                                    <span id="profile-gender" class="text-gray-800 font-semibold"></span>
-                                </div>
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Village:</span>
-                                    <span id="profile-village" class="text-gray-800 font-semibold"></span>
+                            </div>
+                            
+                            <!-- Contact Information -->
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                    <i class="fas fa-address-book text-purple-500 mr-2"></i>Contact Information
+                                </h3>
+                                <div class="space-y-2">
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Mobile:</span>
+                                        <span id="profile-mobile" class="text-gray-800 font-semibold">Not provided</span>
+                                    </div>
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Email:</span>
+                                        <span id="profile-email" class="text-gray-800 font-semibold">Not provided</span>
+                                    </div>
+                                    <div class="user-detail-item">
+                                        <span class="text-gray-600 font-medium">Member Since:</span>
+                                        <span id="profile-created" class="text-gray-800 font-semibold"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Contact Information -->
+                        <!-- Health Statistics -->
                         <div class="bg-gray-50 rounded-xl p-4">
                             <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                                <i class="fas fa-address-book text-purple-500 mr-2"></i>Contact Information
+                                <i class="fas fa-chart-line text-red-500 mr-2"></i>Health Statistics
                             </h3>
-                            <div class="space-y-2">
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Mobile:</span>
-                                    <span id="profile-mobile" class="text-gray-800 font-semibold">Not provided</span>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="stat-card border-t-blue-500">
+                                    <div class="text-2xl font-bold text-blue-600" id="total-analyses">0</div>
+                                    <div class="text-sm text-gray-600">Total Analyses</div>
                                 </div>
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Email:</span>
-                                    <span id="profile-email" class="text-gray-800 font-semibold">Not provided</span>
+                                <div class="stat-card border-t-green-500">
+                                    <div class="text-2xl font-bold text-green-600" id="avg-risk-score">0</div>
+                                    <div class="text-sm text-gray-600">Avg Risk Score</div>
                                 </div>
-                                <div class="user-detail-item">
-                                    <span class="text-gray-600 font-medium">Member Since:</span>
-                                    <span id="profile-created" class="text-gray-800 font-semibold"></span>
+                                <div class="stat-card border-t-purple-500">
+                                    <div class="text-2xl font-bold text-purple-600" id="last-analysis">Never</div>
+                                    <div class="text-sm text-gray-600">Last Analysis</div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Health Statistics -->
-                    <div class="bg-gray-50 rounded-xl p-4">
-                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-chart-line text-red-500 mr-2"></i>Health Statistics
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="stat-card border-t-blue-500">
-                                <div class="text-2xl font-bold text-blue-600" id="total-analyses">0</div>
-                                <div class="text-sm text-gray-600">Total Analyses</div>
-                            </div>
-                            <div class="stat-card border-t-green-500">
-                                <div class="text-2xl font-bold text-green-600" id="avg-risk-score">0</div>
-                                <div class="text-sm text-gray-600">Avg Risk Score</div>
-                            </div>
-                            <div class="stat-card border-t-purple-500">
-                                <div class="text-2xl font-bold text-purple-600" id="last-analysis">Never</div>
-                                <div class="text-sm text-gray-600">Last Analysis</div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Results Display -->
-            <div id="results" class="hidden section-card">
-                <div id="results-header" class="section-header">
-                    <i class="fas fa-clipboard-check mr-2"></i>
-                    <h2 class="text-xl font-semibold">Health Assessment Report</h2>
+                <!-- Progress Indicator -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <i class="fas fa-tasks mr-2"></i>
+                        <h2 class="text-xl font-semibold">Analysis Progress</h2>
+                    </div>
+                    <div class="section-content">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium">Step 1 of 3: Complete Personal Information</span>
+                            <span class="text-sm font-medium">33%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-indigo-500" style="width: 33%"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="section-content">
-                    <div class="text-center mb-6">
-                        <p id="risk-level" class="text-3xl font-extrabold mb-2"></p>
-                        <p id="result-message" class="text-lg mb-4"></p>
-                        <div class="inline-flex items-center bg-white bg-opacity-80 px-4 py-2 rounded-full">
-                            <i class="fas fa-chart-bar text-indigo-500 mr-2"></i>
-                            <span class="font-semibold">Risk Score: <span id="risk-score-value" class="text-xl"></span>/10</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Selected Symptoms -->
-                    <div class="mb-6">
-                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-list-ul text-blue-500 mr-2"></i>Selected Symptoms
-                        </h3>
-                        <div id="selected-symptoms-list" class="flex flex-wrap gap-2">
-                            <!-- Symptoms will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <!-- Detected Diseases -->
-                    <div class="mb-6">
-                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-virus text-red-500 mr-2"></i>Potential Water-Borne Diseases
-                        </h3>
-                        <div id="detected-diseases" class="space-y-3">
-                            <!-- Diseases will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <!-- Prevention Tips -->
-                    <div class="mb-6">
-                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-shield-alt text-green-500 mr-2"></i>Prevention Recommendations
-                        </h3>
-                        <div id="prevention-tips">
-                            <!-- Prevention tips will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <p class="text-sm text-gray-500 mt-6 text-center">
-                        <i class="fas fa-exclamation-triangle mr-1"></i> This assessment is for informational purposes only. For an accurate diagnosis, please consult a qualified healthcare professional.
-                    </p>
-                </div>
-            </div>
 
-            <!-- Analysis History -->
-            <div id="history-section" class="hidden section-card">
-                <div class="section-header">
-                    <i class="fas fa-history mr-2"></i>
-                    <h2 class="text-xl font-semibold">Health Analysis History</h2>
-                </div>
-                <div class="section-content">
-                    <div id="history-list" class="space-y-3">
-                        <!-- History items will be populated here -->
+                <!-- Symptoms Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <i class="fas fa-stethoscope mr-2"></i>
+                        <h2 class="text-xl font-semibold">Symptom Assessment</h2>
                     </div>
-                    <p class="text-sm text-gray-500 mt-3 text-center" id="no-history-message">
-                        No previous analysis history found.
-                    </p>
+                    <div class="section-content">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <button class="tab-button active" data-category="all">All Symptoms</button>
+                            <button class="tab-button" data-category="common">Common</button>
+                            <button class="tab-button" data-category="severe">Severe</button>
+                            <button class="tab-button" data-category="digestive">Digestive</button>
+                        </div>
+                        <p class="text-gray-600 mb-4">Select all symptoms you're currently experiencing. This helps us accurately assess your health risk.</p>
+                        <div id="symptom-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <!-- Symptoms will be dynamically loaded here -->
+                        </div>
+                        <div class="mt-4 flex items-center text-sm text-gray-500">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <span>Selected: <span id="selected-count">0</span> symptoms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission and Loading -->
+                <div class="section-card">
+                    <div class="section-content">
+                        <button id="analyzeBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:-translate-y-1 pulse-glow flex items-center justify-center">
+                            <i class="fas fa-search-medical mr-2"></i> Analyze Symptoms & Generate Report
+                        </button>
+                        <div id="loading" class="hidden text-center text-gray-600 mt-4">
+                            <div class="inline-flex items-center bg-blue-50 p-4 rounded-xl">
+                                <svg class="animate-spin h-6 w-6 text-blue-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <div>
+                                    <p class="font-medium">Analyzing your symptoms...</p>
+                                    <p class="text-sm">This may take a few seconds</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Display -->
+                <div id="results" class="hidden section-card">
+                    <div id="results-header" class="section-header">
+                        <i class="fas fa-clipboard-check mr-2"></i>
+                        <h2 class="text-xl font-semibold">Health Assessment Report</h2>
+                    </div>
+                    <div class="section-content">
+                        <div class="text-center mb-6">
+                            <p id="risk-level" class="text-3xl font-extrabold mb-2"></p>
+                            <p id="result-message" class="text-lg mb-4"></p>
+                            <div class="inline-flex items-center bg-white bg-opacity-80 px-4 py-2 rounded-full">
+                                <i class="fas fa-chart-bar text-indigo-500 mr-2"></i>
+                                <span class="font-semibold">Risk Score: <span id="risk-score-value" class="text-xl"></span>/10</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Selected Symptoms -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-list-ul text-blue-500 mr-2"></i>Selected Symptoms
+                            </h3>
+                            <div id="selected-symptoms-list" class="flex flex-wrap gap-2">
+                                <!-- Symptoms will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Detected Diseases -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-virus text-red-500 mr-2"></i>Potential Water-Borne Diseases
+                            </h3>
+                            <div id="detected-diseases" class="space-y-3">
+                                <!-- Diseases will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Exercise Recommendations -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-running text-green-500 mr-2"></i>Exercise Recommendations
+                            </h3>
+                            <div id="exercise-recommendations" class="space-y-4">
+                                <!-- Exercise recommendations will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Prevention Tips -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-shield-alt text-green-500 mr-2"></i>Prevention Recommendations
+                            </h3>
+                            <div id="prevention-tips">
+                                <!-- Prevention tips will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm text-gray-500 mt-6 text-center">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> This assessment is for informational purposes only. For an accurate diagnosis, please consult a qualified healthcare professional.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Analysis History -->
+                <div id="history-section" class="section-card">
+                    <div class="section-header">
+                        <i class="fas fa-history mr-2"></i>
+                        <h2 class="text-xl font-semibold">Health Analysis History</h2>
+                    </div>
+                    <div class="section-content">
+                        <div id="history-list" class="space-y-3">
+                            <!-- History items will be populated here -->
+                        </div>
+                        <p class="text-sm text-gray-500 mt-3 text-center" id="no-history-message">
+                            No previous analysis history found.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Floating Action Button -->
-    <div class="floating-action" id="scroll-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </div>
+        <!-- Floating Action Button -->
+        <div class="floating-action" id="scroll-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </div>
 
-    <!-- Notification and Modal -->
-    <div id="notification-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm space-y-4 animate-fade-in">
-            <div id="modal-icon" class="text-center text-4xl"></div>
-            <h3 id="modal-title" class="text-xl font-bold text-center"></h3>
-            <p id="modal-message" class="text-center text-gray-600"></p>
-            <button id="modal-close-btn" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition">OK</button>
+        <!-- Notification and Modal -->
+        <div id="notification-modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm space-y-4 animate-fade-in">
+                <div id="modal-icon" class="text-center text-4xl"></div>
+                <h3 id="modal-title" class="text-xl font-bold text-center"></h3>
+                <p id="modal-message" class="text-center text-gray-600"></p>
+                <button id="modal-close-btn" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition">OK</button>
+            </div>
         </div>
     </div>
 
@@ -562,7 +678,202 @@
     <script>
         // Set the base URL for the backend API.
         const BASE_API_URL = 'https://web-production-4b6b9.up.railway.app/';
+        // Function to handle user registration
+async function handleRegistration(formData) {
+    try {
+        // Validate form data
+        if (!formData.name || !formData.age || !formData.gender || !formData.village) {
+            showLoginMessage('Please fill in all required fields.', 'error');
+            return false;
+        }
+        
+        // API call to register new user
+        const response = await fetch(`${BASE_API_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: formData.name,
+                age: parseInt(formData.age),
+                gender: formData.gender,
+                village: formData.village,
+                mobile: formData.mobile || '',
+                email: formData.email || ''
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Registration successful - now login with the new credentials
+            const password = `${formData.name.replace(/\s+/g, '')}${formData.age}`;
+            const loginSuccess = await handleLogin(data.user_id, password);
+            
+            if (loginSuccess) {
+                showNotification(`Account created successfully! Your User ID is ${data.user_id}.`, 'success');
+                return true;
+            } else {
+                showLoginMessage('Account created but login failed. Please try logging in manually.', 'error');
+                return false;
+            }
+        } else {
+            showLoginMessage(data.error || 'Registration failed. Please try again.', 'error');
+            return false;
+        }
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        showLoginMessage('Network error. Please check your connection and try again.', 'error');
+        return false;
+    }
+}
+        // Function to handle user registration
+async function handleRegistration(formData) {
+    try {
+        // Validate form data
+        if (!formData.name || !formData.age || !formData.gender || !formData.village) {
+            showLoginMessage('Please fill in all required fields.', 'error');
+            return false;
+        }
+        
+        // API call to register new user
+        const response = await fetch(`${BASE_API_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: formData.name,
+                age: parseInt(formData.age),
+                gender: formData.gender,
+                village: formData.village,
+                mobile: formData.mobile || '',
+                email: formData.email || ''
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Registration successful - now login with the new credentials
+            const password = `${formData.name.replace(/\s+/g, '')}${formData.age}`;
+            const loginSuccess = await handleLogin(data.user_id, password);
+            
+            if (loginSuccess) {
+                showNotification(`Account created successfully! Your User ID is ${data.user_id}.`, 'success');
+                return true;
+            } else {
+                showLoginMessage('Account created but login failed. Please try logging in manually.', 'error');
+                return false;
+            }
+        } else {
+            showLoginMessage(data.error || 'Registration failed. Please try again.', 'error');
+            return false;
+        }
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        showLoginMessage('Network error. Please check your connection and try again.', 'error');
+        return false;
+    }
+}
 
+// Function to handle user login
+async function handleLogin(userId, password) {
+    try {
+        // API call to login
+        const response = await fetch(`${BASE_API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                password: password
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Login successful
+            currentUserId = data.user.id;
+            userData = data.user;
+            isLoggedIn = true;
+            
+            // Store login session (for demo purposes)
+            localStorage.setItem('healthshield_user_id', currentUserId);
+            localStorage.setItem('healthshield_user_data', JSON.stringify(userData));
+            
+            // Show main application
+            loginPage.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            
+            // Load user profile and history
+            await loadUserProfile();
+            
+            return true;
+        } else {
+            showLoginMessage(data.error || 'Invalid credentials. Please try again.', 'error');
+            return false;
+        }
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        showLoginMessage('Network error. Please check your connection and try again.', 'error');
+        return false;
+    }
+}
+
+// Function to load user profile
+async function loadUserProfile() {
+    if (!currentUserId) return;
+    
+    try {
+        // Fetch user profile and history
+        const response = await fetch(`${BASE_API_URL}/api/user/${currentUserId}`);
+        if (response.ok) {
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update profile information
+                document.getElementById('user-id-value').textContent = currentUserId;
+                document.getElementById('profile-name').textContent = data.user.name;
+                document.getElementById('profile-age').textContent = `${data.user.age} years`;
+                document.getElementById('profile-gender').textContent = data.user.gender.charAt(0).toUpperCase() + data.user.gender.slice(1);
+                document.getElementById('profile-village').textContent = data.user.village;
+                
+                // Update contact information
+                document.getElementById('profile-mobile').textContent = data.user.mobile || 'Not provided';
+                document.getElementById('profile-email').textContent = data.user.email || 'Not provided';
+                
+                // Format and display creation date
+                const createdDate = new Date(data.user.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('profile-created').textContent = createdDate;
+                
+                // Update statistics
+                if (data.stats) {
+                    document.getElementById('total-analyses').textContent = data.stats.total_analyses || 0;
+                    document.getElementById('avg-risk-score').textContent = data.stats.avg_risk_score ? data.stats.avg_risk_score.toFixed(1) : '0.0';
+                    document.getElementById('last-analysis').textContent = data.stats.last_analysis ? 
+                        new Date(data.stats.last_analysis).toLocaleDateString() : 'Never';
+                }
+                
+                // Show analysis history
+                showAnalysisHistory(data.history);
+            }
+        } else {
+            console.error('Failed to load user profile');
+        }
+    } catch (error) {
+        console.error('Error loading user profile:', error);
+    }
+}
         // Extended symptom data with categories
         const SYMPTOMS = [
             { id: 1, name: "Fever", icon: "fas fa-thermometer-half", category: "common" },
@@ -627,6 +938,79 @@
             }
         ];
 
+        // Exercise recommendations based on risk level
+        const EXERCISE_RECOMMENDATIONS = {
+            high: [
+                {
+                    name: "Gentle Walking",
+                    description: "Start with 5-10 minutes of slow walking daily. Focus on maintaining hydration.",
+                    duration: "5-10 minutes",
+                    frequency: "Daily",
+                    icon: "fas fa-walking"
+                },
+                {
+                    name: "Breathing Exercises",
+                    description: "Practice deep breathing to reduce stress and improve oxygen flow.",
+                    duration: "5 minutes",
+                    frequency: "2-3 times daily",
+                    icon: "fas fa-wind"
+                },
+                {
+                    name: "Light Stretching",
+                    description: "Gentle stretching to maintain mobility without exertion.",
+                    duration: "5 minutes",
+                    frequency: "Daily",
+                    icon: "fas fa-hands"
+                }
+            ],
+            medium: [
+                {
+                    name: "Brisk Walking",
+                    description: "Increase to 15-20 minutes of brisk walking to improve circulation.",
+                    duration: "15-20 minutes",
+                    frequency: "Daily",
+                    icon: "fas fa-walking"
+                },
+                {
+                    name: "Yoga",
+                    description: "Gentle yoga poses to improve flexibility and reduce stress.",
+                    duration: "10-15 minutes",
+                    frequency: "3-4 times weekly",
+                    icon: "fas fa-spa"
+                },
+                {
+                    name: "Light Strength Training",
+                    description: "Bodyweight exercises like squats and push-ups (modified if needed).",
+                    duration: "10 minutes",
+                    frequency: "2-3 times weekly",
+                    icon: "fas fa-dumbbell"
+                }
+            ],
+            low: [
+                {
+                    name: "Cardiovascular Exercise",
+                    description: "30 minutes of moderate-intensity exercise like jogging or cycling.",
+                    duration: "30 minutes",
+                    frequency: "3-5 times weekly",
+                    icon: "fas fa-heartbeat"
+                },
+                {
+                    name: "Strength Training",
+                    description: "Full-body strength workout with weights or resistance bands.",
+                    duration: "20-30 minutes",
+                    frequency: "2-3 times weekly",
+                    icon: "fas fa-dumbbell"
+                },
+                {
+                    name: "High-Intensity Interval Training",
+                    description: "Short bursts of high-intensity exercise followed by rest periods.",
+                    duration: "15-20 minutes",
+                    frequency: "1-2 times weekly",
+                    icon: "fas fa-bolt"
+                }
+            ]
+        };
+
         // Prevention tips data
         const PREVENTION_TIPS = [
             { title: "Drink Safe Water", description: "Always drink boiled, filtered, or bottled water to prevent water-borne diseases." },
@@ -637,12 +1021,20 @@
         ];
 
         // UI elements
+        const loginPage = document.getElementById('login-page');
+        const mainApp = document.getElementById('main-app');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginMessage = document.getElementById('login-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        
         const symptomListEl = document.getElementById('symptom-list');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const loadingEl = document.getElementById('loading');
         const resultsEl = document.getElementById('results');
         const resultsHeader = document.getElementById('results-header');
-        const userForm = document.getElementById('user-form');
         const notificationModal = document.getElementById('notification-modal');
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
@@ -658,8 +1050,35 @@
         let userData = {};
         let currentUserId = null;
         let currentCategory = 'all';
+        let isLoggedIn = false;
 
-        // Function to create a custom notification modal
+        // Function to show/hide login/register forms
+        function toggleAuthForms() {
+            if (loginTab.classList.contains('active')) {
+                // Show login form
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                // Show register form
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners for login/register tabs
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            toggleAuthForms();
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            toggleAuthForms();
+        });
+
+        // Function to show a custom notification modal
         function showNotification(message, type) {
             let icon = '';
             let title = '';
@@ -692,6 +1111,120 @@
             notificationModal.classList.remove('flex');
         });
 
+        // Function to show login message
+        function showLoginMessage(message, type) {
+            loginMessage.textContent = message;
+            loginMessage.className = `mt-4 p-3 rounded-lg text-center ${type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`;
+            loginMessage.classList.remove('hidden');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                loginMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Function to handle user login
+        async function handleLogin(userId, password) {
+            try {
+                // In a real application, this would be an API call
+                // For demo purposes, we'll simulate the login process
+                
+                // Check if user exists (simulate API call)
+                const response = await fetch(`${BASE_API_URL}/api/debug/users`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const users = data.users || [];
+                    
+                    // Find user by ID
+                    const user = users.find(u => u.id === parseInt(userId));
+                    
+                    if (user) {
+                        // Check password (name + age)
+                        const expectedPassword = `${user.name.replace(/\s+/g, '')}${user.age}`;
+                        
+                        if (password === expectedPassword) {
+                            // Login successful
+                            currentUserId = user.id;
+                            userData = user;
+                            isLoggedIn = true;
+                            
+                            // Show main application
+                            loginPage.classList.add('hidden');
+                            mainApp.classList.remove('hidden');
+                            
+                            // Load user profile and history
+                            loadUserProfile();
+                            
+                            showNotification(`Welcome back, ${user.name}!`, 'success');
+                            return true;
+                        } else {
+                            showLoginMessage('Invalid password. Please try again.', 'error');
+                            return false;
+                        }
+                    } else {
+                        showLoginMessage('User ID not found. Please check your ID or register as a new user.', 'error');
+                        return false;
+                    }
+                } else {
+                    showLoginMessage('Server error. Please try again later.', 'error');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showLoginMessage('Network error. Please check your connection.', 'error');
+                return false;
+            }
+        }
+
+        // ...existing code...
+
+        // Function to load user profile
+        async function loadUserProfile() {
+            if (!currentUserId) return;
+            
+            try {
+                // Fetch user profile and history
+                const response = await fetch(`${BASE_API_URL}/api/user/${currentUserId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Update profile information
+                        document.getElementById('user-id-value').textContent = currentUserId;
+                        document.getElementById('profile-name').textContent = data.user.name;
+                        document.getElementById('profile-age').textContent = `${data.user.age} years`;
+                        document.getElementById('profile-gender').textContent = data.user.gender.charAt(0).toUpperCase() + data.user.gender.slice(1);
+                        document.getElementById('profile-village').textContent = data.user.village;
+                        
+                        // Update contact information
+                        document.getElementById('profile-mobile').textContent = data.user.mobile || 'Not provided';
+                        document.getElementById('profile-email').textContent = data.user.email || 'Not provided';
+                        
+                        // Format and display creation date
+                        const createdDate = new Date(data.user.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        document.getElementById('profile-created').textContent = createdDate;
+                        
+                        // Update statistics
+                        if (data.stats) {
+                            document.getElementById('total-analyses').textContent = data.stats.total_analyses || 0;
+                            document.getElementById('avg-risk-score').textContent = data.stats.avg_risk_score ? data.stats.avg_risk_score.toFixed(1) : '0.0';
+                            document.getElementById('last-analysis').textContent = data.stats.last_analysis ? 
+                                new Date(data.stats.last_analysis).toLocaleDateString() : 'Never';
+                        }
+                        
+                        // Show analysis history
+                        showAnalysisHistory(data.history);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+    
         // Function to filter symptoms by category
         function filterSymptoms(category) {
             currentCategory = category;
@@ -739,82 +1272,12 @@
             selectedCountEl.textContent = selectedSymptoms.length;
         }
 
-        // Function to validate user form data
-        function validateForm() {
-            const name = document.getElementById('userName').value.trim();
-            const age = document.getElementById('userAge').value.trim();
-            const gender = document.getElementById('userGender').value;
-            const village = document.getElementById('userVillage').value.trim();
-            
-            if (!name) {
-                showNotification('Please enter your name', 'warning');
-                return false;
-            }
-            if (!age || age < 1 || age > 120) {
-                showNotification('Please enter a valid age', 'warning');
-                return false;
-            }
-            if (!gender) {
-                showNotification('Please select your gender', 'warning');
-                return false;
-            }
-            if (!village) {
-                showNotification('Please enter your village name', 'warning');
-                return false;
-            }
-            
-            userData = {
-                name: name,
-                age: parseInt(age),
-                gender: gender,
-                village: village,
-                mobile: document.getElementById('userMobile').value.trim() || null,
-                email: document.getElementById('userEmail').value.trim() || null
-            };
-            
-            return true;
-        }
-
         // Function to show/hide loading indicator
         function showLoading(show) {
             loadingEl.classList.toggle('hidden', !show);
             analyzeBtn.disabled = show;
             analyzeBtn.classList.toggle('opacity-50', show);
             analyzeBtn.classList.toggle('pulse-glow', !show);
-        }
-
-        // Function to display user profile
-        function showUserProfile(userDetails, userStats) {
-            // Update profile information
-            document.getElementById('user-id-value').textContent = currentUserId;
-            document.getElementById('profile-name').textContent = userDetails.name;
-            document.getElementById('profile-age').textContent = `${userDetails.age} years`;
-            document.getElementById('profile-gender').textContent = userDetails.gender.charAt(0).toUpperCase() + userDetails.gender.slice(1);
-            document.getElementById('profile-village').textContent = userDetails.village;
-            
-            // Update contact information
-            document.getElementById('profile-mobile').textContent = userDetails.mobile || 'Not provided';
-            document.getElementById('profile-email').textContent = userDetails.email || 'Not provided';
-            
-            // Format and display creation date
-            const createdDate = new Date(userDetails.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            document.getElementById('profile-created').textContent = createdDate;
-            
-            // Update statistics
-            if (userStats) {
-                document.getElementById('total-analyses').textContent = userStats.total_analyses || 0;
-                document.getElementById('avg-risk-score').textContent = userStats.avg_risk_score ? userStats.avg_risk_score.toFixed(1) : '0.0';
-                document.getElementById('last-analysis').textContent = userStats.last_analysis ? 
-                    new Date(userStats.last_analysis).toLocaleDateString() : 'Never';
-            }
-            
-            // Show profile section
-            userProfileSection.classList.remove('hidden');
-            userProfileSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         // Function to display analysis history
@@ -847,8 +1310,6 @@
                 noHistoryMessage.classList.remove('hidden');
                 historyList.innerHTML = '';
             }
-            
-            historySection.classList.remove('hidden');
         }
 
         // Helper function for risk badge styling
@@ -859,6 +1320,30 @@
                 case 'low': return 'bg-green-100 text-green-800';
                 default: return 'bg-gray-100 text-gray-800';
             }
+        }
+
+        // Function to show exercise recommendations
+        function showExerciseRecommendations(riskLevel) {
+            const exerciseContainer = document.getElementById('exercise-recommendations');
+            const exercises = EXERCISE_RECOMMENDATIONS[riskLevel] || EXERCISE_RECOMMENDATIONS.low;
+            
+            exerciseContainer.innerHTML = exercises.map(exercise => `
+                <div class="exercise-card">
+                    <div class="flex items-start">
+                        <div class="exercise-icon">
+                            <i class="${exercise.icon}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 mb-1">${exercise.name}</h4>
+                            <p class="text-gray-600 text-sm mb-2">${exercise.description}</p>
+                            <div class="flex text-xs text-gray-500">
+                                <span class="mr-4"><i class="fas fa-clock mr-1"></i> ${exercise.duration}</span>
+                                <span><i class="fas fa-calendar-alt mr-1"></i> ${exercise.frequency}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Function to show analysis results
@@ -904,7 +1389,7 @@
                 </span>
             `).join('');
             
-            // Display detected diseases - FIXED: Remove duplicates
+            // Display detected diseases
             detectedDiseasesEl.innerHTML = '';
             if (analysisResult.matching_diseases && analysisResult.matching_diseases.length > 0) {
                 resultMessageEl.textContent = 'Potential water-borne diseases based on your symptoms:';
@@ -961,6 +1446,9 @@
                 detectedDiseasesEl.innerHTML = '<p class="text-gray-600 text-center">No significant disease matches found for your symptoms.</p>';
             }
             
+            // Display exercise recommendations
+            showExerciseRecommendations(analysisResult.risk_level);
+            
             // Display prevention tips
             preventionTipsEl.innerHTML = PREVENTION_TIPS.map(tip => `
                 <div class="prevention-tip">
@@ -975,107 +1463,56 @@
             resultsEl.classList.remove('hidden');
         }
 
-        // Function to fetch user profile and history
-        async function fetchUserProfile(userId) {
-            try {
-                const response = await fetch(`${BASE_API_URL}/api/user/${userId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        showUserProfile(data.user, data.stats);
-                        showAnalysisHistory(data.history);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-            }
-        }
-
         // Main function to analyze symptoms
         async function analyzeSymptoms() {
+            if (!isLoggedIn) {
+                showNotification('Please log in to analyze symptoms', 'warning');
+                return;
+            }
+            
             if (selectedSymptoms.length === 0) {
                 showNotification('Please select at least one symptom', 'warning');
                 return;
             }
             
-            if (!validateForm()) {
-                return;
-            }
-            
             showLoading(true);
             resultsEl.classList.add('hidden');
-            userProfileSection.classList.add('hidden');
-            historySection.classList.add('hidden');
 
             try {
-                // Simulate API call with mock data
-                setTimeout(() => {
-                    // Mock analysis result
-                    const mockResult = {
-                        success: true,
-                        user_id: Math.floor(Math.random() * 1000) + 1,
-                        risk_level: selectedSymptoms.length > 5 ? 'high' : selectedSymptoms.length > 2 ? 'medium' : 'low',
-                        risk_score: Math.min(10, Math.floor(selectedSymptoms.length * 1.5)),
-                        message: 'Analysis completed successfully',
-                        selected_symptoms: selectedSymptoms.map(id => {
-                            const symptom = SYMPTOMS.find(s => s.id === id);
-                            return symptom ? { name: symptom.name, icon: symptom.icon } : null;
-                        }).filter(Boolean),
-                        matching_diseases: DISEASES.filter(disease => 
-                            Math.random() > 0.3 // Randomly include diseases for demo
-                        )
-                    };
-                    
-                    // Remove duplicates from matching diseases
-                    const uniqueDiseases = [];
-                    const seenNames = new Set();
-                    
-                    mockResult.matching_diseases.forEach(disease => {
-                        if (!seenNames.has(disease.name)) {
-                            seenNames.add(disease.name);
-                            uniqueDiseases.push(disease);
-                        }
-                    });
-                    
-                    mockResult.matching_diseases = uniqueDiseases;
-                    
-                    currentUserId = mockResult.user_id;
-                    showResults(mockResult);
-                    showNotification(mockResult.message, mockResult.risk_level === 'high' ? 'warning' : 'success');
-                    
-                    // Fetch and display user profile and history
-                    setTimeout(() => {
-                        const mockUserData = {
-                            name: userData.name,
-                            age: userData.age,
-                            gender: userData.gender,
-                            village: userData.village,
-                            mobile: userData.mobile,
-                            email: userData.email,
-                            created_at: new Date().toISOString()
-                        };
-                        
-                        const mockStats = {
-                            total_analyses: 1,
-                            avg_risk_score: mockResult.risk_score,
-                            last_analysis: new Date().toISOString()
-                        };
-                        
-                        const mockHistory = [{
-                            id: 1,
-                            risk_level: mockResult.risk_level,
-                            risk_score: mockResult.risk_score,
-                            symptoms: JSON.stringify(selectedSymptoms),
-                            analysis_timestamp: new Date().toISOString()
-                        }];
-                        
-                        showUserProfile(mockUserData, mockStats);
-                        showAnalysisHistory(mockHistory);
-                    }, 500);
-                    
-                    showLoading(false);
-                }, 2000);
+                // API call to analyze symptoms
+                const response = await fetch(`${BASE_API_URL}/api/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: userData.name,
+                        age: userData.age,
+                        gender: userData.gender,
+                        village: userData.village,
+                        mobile: userData.mobile || null,
+                        email: userData.email || null,
+                        symptoms: selectedSymptoms
+                    })
+                });
                 
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showResults(data);
+                        showNotification(data.message, data.risk_level === 'high' ? 'warning' : 'success');
+                        
+                        // Reload user profile to update statistics
+                        loadUserProfile();
+                    } else {
+                        showNotification('Analysis failed. Please try again.', 'error');
+                    }
+                } else {
+                    showNotification('Server error. Please try again later.', 'error');
+                }
+                
+                showLoading(false);
             } catch (error) {
                 console.error('Network or server error:', error);
                 showNotification('Connection error. Please ensure the backend server is running.', 'error');
@@ -1091,6 +1528,55 @@
             button.addEventListener('click', () => {
                 filterSymptoms(button.dataset.category);
             });
+        });
+
+        // Event listener for login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('login-user-id').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            if (!userId || !password) {
+                showLoginMessage('Please enter both User ID and password.', 'error');
+                return;
+            }
+            
+            await handleLogin(userId, password);
+        });
+
+        // Event listener for registration form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('register-name').value.trim(),
+                age: document.getElementById('register-age').value.trim(),
+                gender: document.getElementById('register-gender').value,
+                village: document.getElementById('register-village').value.trim(),
+                mobile: document.getElementById('register-mobile').value.trim() || null,
+                email: document.getElementById('register-email').value.trim() || null
+            };
+            
+            await handleRegistration(formData);
+        });
+
+        // Event listener for logout button
+        logoutBtn.addEventListener('click', () => {
+            isLoggedIn = false;
+            currentUserId = null;
+            userData = {};
+            selectedSymptoms = [];
+            
+            // Reset forms
+            loginForm.reset();
+            registerForm.reset();
+            
+            // Show login page
+            mainApp.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+            
+            showNotification('You have been logged out successfully.', 'success');
         });
 
         // Scroll to top functionality
@@ -1113,9 +1599,16 @@
             
             // Hide scroll to top button initially
             scrollToTopBtn.style.display = 'none';
+            
+            // Check if user is already logged in (for demo purposes)
+            // In a real application, this would check for a valid session/token
+            const savedUserId = localStorage.getItem('healthshield_user_id');
+            if (savedUserId) {
+                // Auto-login would happen here in a real app
+                // For demo, we'll just show the login page
+            }
         });
 
     </script>
 </body>
 </html>
-
